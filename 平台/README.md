@@ -34,4 +34,4 @@ curl -fsS http://127.0.0.1:4318/api/health
 
 ## 发布边界
 
-本副本已加入平台 `Dockerfile`、`compose.yaml`、`.dockerignore` 与反代样例，并已在 NAS 宿主 Docker 验证构建、启动、健康检查、重启持久性和 Compose 路径；Caddy 内部 CA 的隔离 HTTPS 反代、登录、Secure Cookie、认证请求与错误 Origin 拒绝也已通过。私有 Docker Hub 候选镜像已推送，仍未公开。公网域名/证书签发、真实 Figma/macOS、编码器与插件归档挂载、固定 digest 后的重建验证及第三方对应源码发布仍未完成；基础镜像已在 `Dockerfile` 中固定为第三方锁核验过的 digest。`原生编码器/Dockerfile` 只用于编码器构建，不参与平台镜像。部署步骤与验证状态见[容器化部署说明](<../部署与运维/04_容器化部署.md>)。后端公开发行、镜像公开、生产迁移及许可审批彼此独立，均未由本说明授权。
+本副本已加入平台 `Dockerfile`、`compose.yaml`、`.dockerignore` 与反代样例，并已在 NAS 宿主 Docker 验证构建、启动、健康检查、重启持久性和 Compose 路径；Caddy 内部 CA 的隔离 HTTPS 反代、登录、Secure Cookie、认证请求与错误 Origin 拒绝也已通过。私有 Docker Hub 候选镜像已推送，仍未公开。公网域名/证书签发、真实 Figma/macOS、真实预览链路及第三方对应源码发布仍未完成；镜像已在宿主按固定 digest 重建并核对系统包与文件哈希，内含预构建编码器运行时和源码重建的插件包。`原生编码器/Dockerfile` 只用于编码器构建，不参与平台镜像。部署步骤与验证状态见[容器化部署说明](<../部署与运维/04_容器化部署.md>)。后端公开发行、镜像公开、生产迁移及许可审批彼此独立，均未由本说明授权。
