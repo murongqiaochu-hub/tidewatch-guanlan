@@ -107,9 +107,9 @@ test('independent actual dark CSS tokens meet AA on canvas, panels, selected con
   const declarations = new Map([...css.matchAll(/(--ii-[a-z-]+)\s*:\s*(#[a-f0-9]{6}|var\(--ii-[a-z-]+\))/g)].map(([,key,value]) => [key,value]));
   const resolve = (name,depth=0) => { assert.ok(depth<8,'Token alias cycle');const value=declarations.get(name);assert.ok(value,`Missing actual CSS token ${name}`);return value.startsWith('#')?value.slice(1):resolve(value.slice(4,-1),depth+1); };
   const tokens = Object.fromEntries(['bg','panel','ink','muted','line','raised','accent','focus','danger'].map(key=>[key,resolve('--ii-'+key)]));
-  assert.deepEqual(tokens, { bg:'101214', panel:'181c20', ink:'edf0f3', muted:'929eac', line:'2e353e', raised:'20252b', accent:'9bc8bd', focus:'9bc8bd', danger:'efa6ad' });
+  assert.deepEqual(tokens, { bg:'0b2026', panel:'112b32', ink:'eaf3f1', muted:'93b3ae', line:'20464d', raised:'15343b', accent:'8fd9c4', focus:'8fd9c4', danger:'f5b3ba' });
   const luminance = hex => { const channels = hex.match(/[a-f0-9]{2}/gi).map(s => parseInt(s, 16) / 255).map(n => n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4); return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722; };
   const pairs = ['ink','muted','accent','focus','danger'].flatMap(fg => ['bg','panel','raised'].map(bg => [tokens[fg],tokens[bg]]));
-  pairs.push([tokens.bg,tokens.accent], [tokens.danger,'302126']);
+  pairs.push([tokens.bg,tokens.accent], [tokens.danger,'33232a']);
   for (const [fg,bg] of pairs) { const a=luminance(fg), b=luminance(bg), contrast=(Math.max(a,b)+0.05)/(Math.min(a,b)+0.05); assert.ok(contrast >= 4.5, `${fg}/${bg}=${contrast}`); }
 });

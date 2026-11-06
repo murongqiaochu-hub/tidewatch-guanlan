@@ -20,7 +20,7 @@ function shell(page,{role='admin',name='真实 <项目>',artifacts={}}={}){
 }
 
 test('Master: 208 workspace navigation and neutral primary action are the real tokens',()=>{
- for(const value of ['#0b2026','#081a1e','#0d242a','#112b32','#15343b','#eaf3f1','#88a7a3','#8fd9c4','#e6f1ee'])assert.ok(css.includes(value),value)
+ for(const value of ['#0b2026','#081a1e','#0d242a','#112b32','#15343b','#eaf3f1','#93b3ae','#8fd9c4','#e6f1ee'])assert.ok(css.includes(value),value)
  assert.match(css,/--nav-width:208px/);assert.match(css,/--command-height:52px/)
  assert.match(css,/button\.primary,a\.button\.primary\s*\{\s*background:var\(--button-bg\); color:var\(--button-text\)/)
  assert.doesNotMatch(css,/#79d7e5|#8eb8ff|@import|https?:\/\/|prefers-color-scheme/)
@@ -30,7 +30,7 @@ test('Master: 208 workspace navigation and neutral primary action are the real t
 test('SSR: semantic workspace, current navigation, escaped boot, nonce and error state remain intact',()=>{
  const project=shell('projects');assert.equal(project.status,200);assert.match(project.body,/<aside id="workspace-nav"/);assert.match(project.body,/<nav class="workspace-links" aria-label="主导航">/);assert.match(project.body,/<a href="\/projects" aria-current="page">/);assert.match(project.body,/nav-toggle/);assert.match(project.body,/跳至内容/);assert.doesNotMatch(project.body,/class="topbar"|class="site-footer"|passwordHash|sessionVersion/)
  assert.ok(project.body.includes('真实 &lt;项目&gt;'));assert.match(project.headers['Content-Security-Policy'],/script-src 'self' 'nonce-/);assert.match(project.headers['Content-Security-Policy'],/frame-ancestors 'none'; base-uri 'none'; form-action 'self'/);assert.equal(project.headers['Content-Length'],Buffer.byteLength(project.body))
- const developer=shell('projects',{role:'developer'});assert.doesNotMatch(developer.body,/href="\/accounts"/)
+ const developer=shell('projects',{role:'developer'});assert.match(developer.body,/href="\/accounts"/);assert.doesNotMatch(developer.body,/href="\/invites"/)
  const error=shell('error');assert.equal(error.status,404);const visibleError=error.body.replace(/<script[\s\S]*?<\/script>/g,'');assert.match(visibleError,/页面不存在或已被移除/);assert.doesNotMatch(visibleError,/bad|not_found|<script/);assert.equal(error.boot.message,'<script>bad</script>');assert.equal(error.boot.code,'not_found');assert.doesNotMatch(error.body,/<script>bad<\/script>/)
  const edit=shell('canvas');assert.match(edit.body,/class="canvas-shell"/);assert.doesNotMatch(edit.body,/<aside|workspace-mobile|site-footer/)
 })
@@ -73,7 +73,7 @@ test('Public helper semantics stay exact and never broaden selection, redirect o
 
 test('U2 essential control border resolves from the actual input rule to at least 3:1',()=>{
  const vars=new Map([...css.matchAll(/(--[\w-]+)\s*:\s*(#[a-f0-9]{6}|var\(--[\w-]+\))/g)].map(([,key,value])=>[key,value])),resolve=key=>{const value=vars.get(key);assert.ok(value,key);return value.startsWith('#')?value.slice(1):resolve(value.slice(4,-1))},rule=css.match(/\ninput,select,textarea\s*\{([^}]+)\}/)[1]
- assert.match(rule,/border:1px solid var\(--control-border\)/);assert.equal(resolve('--control-border'),'64717f');assert.equal(resolve('--border'),'2e353e')
+ assert.match(rule,/border:1px solid var\(--control-border\)/);assert.equal(resolve('--control-border'),'4b7b85');assert.equal(resolve('--border'),'20464d')
  const lum=hex=>hex.match(/../g).map(s=>parseInt(s,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0),a=lum(resolve('--control-border')),b=lum(resolve('--bg'));assert.ok((a+.05)/(b+.05)>=3)
  assert.match(css,/\.project-row[^}]*min-height:80px/);assert.match(css,/\.project-placeholder[^}]*width:76px; height:56px/)
 })

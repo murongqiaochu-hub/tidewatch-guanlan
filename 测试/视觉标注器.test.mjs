@@ -149,7 +149,7 @@ test('LOCALE: new task/revision/scope labels bind in place; user layer/style/Uni
 });
 test('STATIC CONTRACT: Master neutral tokens, AA text, control edges, compact chrome budget, no image filter/Canvas transform',async()=>{
   const css=await readFile(new URL('../查看器/inspector.css',import.meta.url),'utf8'),source=await readFile(new URL('../查看器/index.mjs',import.meta.url),'utf8');
-  const tokens=Object.fromEntries([...css.matchAll(/--ii-p-([a-z-]+):#([a-f0-9]{6})\b/g)].map(([,key,value])=>[key,value]));assert.equal(tokens.base,'101214');assert.equal(tokens.canvas,'0d0f12');assert.equal(tokens.panel,'181c20');assert.equal(tokens.accent,'9bc8bd');assert.equal(tokens.primary,'e4e9eb');
+  const tokens=Object.fromEntries([...css.matchAll(/--ii-p-([a-z-]+):#([a-f0-9]{6})\b/g)].map(([,key,value])=>[key,value]));assert.equal(tokens.base,'0b2026');assert.equal(tokens.canvas,'081a1e');assert.equal(tokens.panel,'112b32');assert.equal(tokens.accent,'8fd9c4');assert.equal(tokens.primary,'e6f1ee');
   const luminance=value=>value.match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0),contrast=(fg,bg)=>(Math.max(luminance(fg),luminance(bg))+.05)/(Math.min(luminance(fg),luminance(bg))+.05);
   for(const foreground of ['ink','secondary','muted','accent','danger'])for(const background of ['base','canvas','panel','raised','hover'])assert.ok(contrast(tokens[foreground],tokens[background])>=4.5,`${foreground}/${background}`);
   assert.ok(contrast(tokens.control,tokens.base)>=3);assert.ok(contrast(tokens.control,tokens.panel)>=3);assert.ok(contrast(tokens['primary-ink'],tokens.primary)>=4.5);
