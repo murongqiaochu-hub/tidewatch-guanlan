@@ -64,10 +64,10 @@ curl -fsS http://127.0.0.1:4318/api/health
 ### 验证状态
 
 - 镜像已在 NAS 宿主用真实 Docker 构建并启动：非 root 运行、健康检查达到 `healthy`、重启后数据保留、Compose 路径可用；验证用临时端口 14319，结束后容器与卷已清理。
-- 镜像已推送到**私有** Docker Hub 仓库 `murongqiaochu/tidewatch-guanlan:0.2.0-candidate`（digest `sha256:044d3e25…c7d7`），仅用于内部拉取验证；仓库保持 private，尚未对外分发。
+- 镜像已发布到公开 Docker Hub 仓库：`docker pull murongqiaochu/tidewatch-guanlan-public:0.2.0`（manifest digest `sha256:3ec34830bc28e8de083fadff5514b51232e3bfafdde576d96a2107195e3f3ea9`），另有 `:latest`。
 - Caddy HTTPS 反向代理端到端已在 NAS 隔离 Docker 网络验证：用 Caddy 内部 CA 对测试域名签发证书，并以受信 CA 验证 TLS；健康页/登录页 200、错误 Origin 403、登录与 Secure Cookie 成功、认证后 `/api/auth/me` 和 `/api/projects` 200。临时容器、网络、卷、密钥和证书已清理。
 - 此验证不等于公网部署验收：正式域名/DNS、ACME 公网证书签发与续期、Nginx 样例及真实 Figma/macOS 客户端仍未验证；镜像内已含编码器运行时与插件包，但真实 Figma/macOS 与真实预览链路仍未验证。
-- 基础镜像已在 `Dockerfile` 固定为第三方锁核验过的 digest（Node 22.23.3 / glibc 2.36-9+deb12u14）；该固定后的构建尚未在本机重建验证。根 NOTICE/SBOM/对应源码材料未完成，现有一部分系统第三方清单与旧镜像对应且缺项，详见内部审计。
+- 基础镜像已在 `Dockerfile` 固定为第三方锁核验过的 digest（Node 22.23.3 / glibc 2.36-9+deb12u14），并已在 NAS 宿主重建核对：88 个系统包与第三方锁一致、镜像内应用与合规文件逐字节对应、非 root 健康检查通过。第三方对应源码随 GitHub Release 资产提供。
 - 最新全量 Node 回归为 **1571 项：1558 通过、9 失败、4 跳过**（退出码 1；内部复跑日志不随公开包发布）；9 项均依赖本机未安装的 `vips`/`zip` 外部工具（JPEG 合成演示与打包校验），不是产品代码失败；不得宣称全量测试通过。
 - 定向验证：C34 生产协议夹具 25/25、原生预览 HTTP 11/11、暗色网页 53/53；这些结果不替代全量测试。
 
