@@ -14,7 +14,7 @@ export HANDOFF_HOST=127.0.0.1 HANDOFF_PORT=4318
 npm start
 ```
 
-数据目录应由当前用户独占；密钥文件须为私有常规文件。仅首次创建空目录时需要管理员引导密码文件；已有数据目录不会重置管理员。配置缺失、权限过宽或路径非法时，启动会拒绝继续。
+数据目录应由当前用户独占；密钥文件须为私有常规文件。仅首次创建空目录时需要管理员引导密码文件；已有数据目录不会重置管理员。配置缺失、权限过宽或路径非法时，启动会拒绝继续。可选 `HANDOFF_DENY_DATA_PREFIXES`（`:` 分隔的绝对路径）用于把服务目录等位置明确列为不安全数据根，避免数据写进部署目录。
 
 ```bash
 curl -fsS http://127.0.0.1:4318/api/health
@@ -34,4 +34,4 @@ curl -fsS http://127.0.0.1:4318/api/health
 
 ## 发布边界
 
-本副本已加入平台 `Dockerfile`、`compose.yaml`、`.dockerignore` 与反代样例，并已在 NAS 宿主 Docker 验证构建、启动、健康检查、重启持久性和 Compose 路径；Caddy 内部 CA 的隔离 HTTPS 反代、登录、Secure Cookie、认证请求与错误 Origin 拒绝也已通过。私有 Docker Hub 候选镜像已推送，仍未公开。公网域名/证书签发、真实 Figma/macOS、编码器挂载、基础镜像 digest 与第三方材料仍未完成。`原生编码器/Dockerfile` 只用于编码器构建，不参与平台镜像。部署步骤与验证状态见[容器化部署说明](<../部署与运维/04_容器化部署.md>)。后端公开发行、镜像公开、生产迁移及许可审批彼此独立，均未由本说明授权。
+本副本已加入平台 `Dockerfile`、`compose.yaml`、`.dockerignore` 与反代样例，并已在 NAS 宿主 Docker 验证构建、启动、健康检查、重启持久性和 Compose 路径；Caddy 内部 CA 的隔离 HTTPS 反代、登录、Secure Cookie、认证请求与错误 Origin 拒绝也已通过。私有 Docker Hub 候选镜像已推送，仍未公开。公网域名/证书签发、真实 Figma/macOS、编码器与插件归档挂载、固定 digest 后的重建验证及第三方对应源码发布仍未完成；基础镜像已在 `Dockerfile` 中固定为第三方锁核验过的 digest。`原生编码器/Dockerfile` 只用于编码器构建，不参与平台镜像。部署步骤与验证状态见[容器化部署说明](<../部署与运维/04_容器化部署.md>)。后端公开发行、镜像公开、生产迁移及许可审批彼此独立，均未由本说明授权。
