@@ -178,7 +178,7 @@ export function mountPluginUI(windowObject = window, documentObject = document) 
     if (!event.isTrusted || current) return;
     try { service = readService(); } catch (error) { status(pluginErrorText(error)); return; }
     current = new windowObject.AbortController(); setBusy(true);
-    void bridge.request(operation, {}, { signal: current.signal }).then(result => { renderState(operation === 'query' ? { ...latestState, phase: ['committed', 'aborted', 'expired'].includes(result.state) ? result.state : 'unknownCommit' } : result); }).catch(error => status(pluginErrorText(error))).finally(() => { current = null; setBusy(false); $('query').disabled = !latestState.sessionId; $('abort').disabled = !latestState.sessionId; });
+    void bridge.request(operation, {}, { signal: current.signal }).then(result => { const terminal = ['committed', 'aborted', 'expired'].includes(result.state); renderState(operation === 'query' ? { ...latestState, locked: terminal ? false : latestState.locked === true, phase: terminal ? result.state : 'unknownCommit' } : result); }).catch(error => status(pluginErrorText(error))).finally(() => { current = null; setBusy(false); $('query').disabled = !latestState.sessionId; $('abort').disabled = !latestState.sessionId; });
   });
   const removeResize = bindResizeControls(documentObject, { getHeight: () => height, async resize(next) { try { const result = await bridge.request('resize', { height: next }); height = result.height; } catch (error) { status(pluginErrorText(error)); } } });
   const ready = (async () => {
