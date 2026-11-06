@@ -41,21 +41,29 @@ async function compiled() {
 }
 const settle = async predicate => { for (let n = 0; n < 100; n++) { if (predicate()) return; await new Promise(resolve => setTimeout(resolve, 5)); } assert.ok(predicate(), 'lifecycle did not settle'); };
 
-test('compiled C34 login clears retired journals without receipt or publish traffic',async()=>{
+for (const scenario of ['terminal','pending','invalid','denied']) test(`compiled C34 login clears retired journals without receipt or publish traffic: ${scenario}`,async()=>{
   const writeFails=false,dropHello=false;
   const bundle = await compiled(); const doc = documentModel(bundle.html); const storage = new Map(); const events = new Set(); const sent = []; const user = { id: 'usr_1', username: 'tester', role: 'admin' }; let callback; let shown = 0; let hellos = 0; let loginCalls = 0; const startupTimer = (fn, ms) => setTimeout(fn, ms === 4000 ? 1 : ms);
   const legacy='independent-inspector.publish.pending.v1.production';
-  const refreshKey=`${legacy}-refresh`;storage.set(legacy,{phase:'unknownCommit',sessionId:'retired-session'});storage.set(refreshKey,null);storage.set('another-plugin',{keep:true});for(const name of ['a','b']) storage.set(legacy+'.journal.writer_'+name.repeat(20),{phase:'unknownCommit',operationId:'retired_'+name,projectId:'project_1',service:{origin:'https://service.example.test:49156',allowLocalhost:false},locked:true,completed:[],done:0,total:1});
+  const refreshKey=`${legacy}-refresh`;
+  // Baseline had four receipt outcomes (terminal/pending/invalid/denied). C34 retires the
+  // journal before login, so every shape must be deleted without any receipt or recovery
+  // request. `denied` is kept as a shape whose old receipt would have been 403.
+  storage.set(legacy, scenario === 'terminal' ? {phase:'committed',sessionId:'retired-session',verified:false,mappingAvailable:false}
+    : scenario === 'pending' ? {phase:'unknownPrepare',operationId:`op_${'9'.repeat(32)}_${'a'.repeat(64)}`,locked:true}
+    : scenario === 'invalid' ? {phase:'not-a-phase',completed:'invalid'}
+    : {phase:'unknownCommit',operationId:`op_${'8'.repeat(32)}_${'b'.repeat(64)}`,sessionId:'retired-session',locked:true});
+  storage.set(refreshKey,null);storage.set('another-plugin',{keep:true});
+  for(const name of ['a','b']) storage.set(legacy+'.journal.writer_'+name.repeat(20),scenario==='invalid'?{phase:'invalid'}:{phase:'unknownCommit',operationId:'retired_'+name,projectId:'project_1',service:{origin:'https://service.example.test:49156',allowLocalhost:false},locked:true,completed:[],done:0,total:1});
   const expectedStorageKeys=[refreshKey,'another-plugin'].sort();
   const paths=[];
   // Opaque parent silently drops HTTPS-targeted messages, matching browser origin rules.
   const parent = { postMessage(data, target) { sent.push(target); if (target !== '*') return; if (data.pluginMessage.operation === 'hello' && ++hellos === 1 && dropHello) return; queueMicrotask(() => callback?.(wire(data.pluginMessage), { origin: 'null' })); } };
   const win = { parent, crypto: webcrypto, AbortController, setTimeout, clearTimeout, addEventListener(_k, f) { events.add(f); }, removeEventListener(_k, f) { events.delete(f); }, async fetch(url) {
-    
-    
     if (url.endsWith('/api/auth/login')) loginCalls++;
     paths.push(new URL(url).pathname);
     if(url.endsWith('/receipt')) assert.fail('retired recovery request must not be sent');
+    assert.equal(/retired-session|retired_|op_[89]/.test(new URL(url).pathname), false, 'retired identities must never be queried');
     const value=url.endsWith('/api/auth/login')?{token:'synthetic-access',user}:url.endsWith('/api/auth/me')?user:url.endsWith('/groups')||url.endsWith('/api/project-groups')?{groups:[]}:{projects:[{id:'project_1',name:'Test project',groupId:null,permissions:{canPublish:true}}]};
     return new Response(JSON.stringify(value),{headers:{'content-type':'application/json'}});
   } };
@@ -81,7 +89,11 @@ test('compiled C34 login clears retired journals without receipt or publish traf
   assert.equal(loginCalls,1);assert.equal($('app').dataset.productionStage,'workspace');
   assert.deepEqual([...storage.keys()].sort(),expectedStorageKeys);assert.equal(storage.get(refreshKey),null);assert.deepEqual(storage.get('another-plugin'),{keep:true});
   assert.equal($('production-pending-tasks'),undefined);assert.equal($('query'),undefined);assert.equal($('abort'),undefined);
+  assert.equal($('package-recovery'),undefined);assert.equal($('recovery'),undefined);
   assert.ok(!paths.some(p=>/receipt|publish|operation|prepare|commit|cancel|query|abort/i.test(p)));
+  // C34 has no phantom terminal to verify: a retired journal cannot keep publishing
+  // disabled. Eligibility alone gates the action until a live unknown state re-locks it.
+  assert.equal($('publish').disabled,true,'no selection is still not publishable');
   const selectedFrame={id:'2:1',type:'FRAME',name:'Eligible frame'};sdk.currentPage.children=[selectedFrame];sdk.currentPage.selection=[selectedFrame];selectionChanged();
   await settle(()=>$('selection-summary').textContent==='1 个画板');
   assert.equal($('publish').disabled,false);

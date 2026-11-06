@@ -58,6 +58,10 @@ test('[MODEL] duplicate subtree ID rejected',async()=>{const h=harness(),p=paylo
 test('[MODEL] export outside original subtree rejected',async()=>{const h=harness(),png=await makeProceduralPng(1,1),p=payload({exports:[{sha256:sha256(png),bytes:png.length,mime:'image/png',exportNodeId:'outside',fileName:'x.png'}]}),{r}=await prepared(h,p);await assert.rejects(upload(h,r,p),code('export_outside_subtree'));});
 test('[MODEL] staged bytes have no public asset/revision rows',async()=>{const h=harness(),{r,p}=await prepared(h);await upload(h,r,p);assert.equal(h.vault.catalog.assets.length,0);assert.equal(h.vault.catalog.frames.filter(f=>f.state==='published').length,0);assert.equal((await h.service.query(h.req,r.sessionId)).uploaded.length,1);});
 test('[MODEL] missing required upload fails commit atomically',async()=>{const h=harness(),{r}=await prepared(h);await assert.rejects(h.service.commit(h.req,r.sessionId));assert.equal(h.vault.catalog.frames.filter(f=>f.state==='published').length,0);assert.equal(h.vault.catalog.frameRevisions.length,0);});
+// C34 conflict, pending product decision: the baseline raced two real prepare sessions and
+// relied on commit-time CAS. Current code rejects the second prepare with
+// `publish_session_active`, so the CAS is provoked by an injected competing revision; the
+// all-or-nothing commit invariant is unchanged.
 test('[MODEL] one competing frame CAS blocks every frame in same session',async()=>{
   const h=harness(),base=await published(h),a=payload({base:base.result.frames[0].revisionId}),b=payload({node:'2:2'}),file=await resolve(h,undefined,undefined,['1:1','2:2']);
   const mixed=await h.service.prepare(h.req,body(file,[a.f,b.f]));await upload(h,mixed,a);await upload(h,mixed,b);
@@ -75,6 +79,31 @@ test('[MODEL] same SID idempotency returns original mapping after newer revision
 test('[MODEL] committed query never invents latest revision mapping',async()=>{const h=harness(),x=await published(h),q=await h.service.query(h.req,x.r.sessionId);assert.equal(q.status,'committed');assert.equal(Object.hasOwn(q.frames[0],'revisionId'),false);});
 test('[MODEL] abort is terminal and preserves committed session',async()=>{const h=harness(),x=await published(h);assert.equal((await h.service.abort(h.req,x.r.sessionId)).status,'committed');const {r}=await prepared(h);assert.equal((await h.service.abort(h.req,r.sessionId)).status,'aborted');assert.equal((await h.service.abort(h.req,r.sessionId)).status,'aborted');});
 test('[MODEL] expired legacy session rejects commit but preserves open state and lock',async()=>{const h=harness(),{r,p,file}=await prepared(h);await upload(h,r,p);h.advance(7_200_001);await assert.rejects(h.service.commit(h.req,r.sessionId),code('session_expired'));const q=await h.service.query(h.req,r.sessionId);assert.equal(q.status,'open');assert.equal(q.expiresAt,r.expiresAt);await assert.rejects(h.service.prepare(h.req,body(file,[p.f])),code('publish_session_active'));});
+test('[MODEL] expired legacy session retains staged bytes and lock until an explicit abort',async()=>{
+  // C34 conflict with the retired `expired`/auto-GC invariant: the deadline only makes
+  // writes fail closed. It must not rewrite the session row, delete staged originals or
+  // release the project lock; only the explicit abort terminal transition may do that.
+  const h=harness(),{r,p,file}=await prepared(h);await upload(h,r,p);h.advance(7_200_001);
+  await assert.rejects(h.service.commit(h.req,r.sessionId),code('session_expired'));
+  assert.equal((await h.service.query(h.req,r.sessionId)).status,'open');
+  for(const asset of p.assets.values())assert.deepEqual(await h.vault.readStaged(r.sessionId,asset.sha256),asset.data,'expiry must not garbage-collect staged bytes');
+  await assert.rejects(h.service.prepare(h.req,body(file,[p.f])),code('publish_session_active'));
+  assert.equal((await h.service.abort(h.req,r.sessionId)).status,'aborted');
+  for(const asset of p.assets.values())assert.deepEqual(await h.vault.readStaged(r.sessionId,asset.sha256),asset.data,'abort alone must not silently delete staged bytes');
+  await assert.rejects(h.service.commit(h.req,r.sessionId),code('session_closed'));
+  assert.equal((await h.service.prepare(h.req,body(file,[p.f]))).status,'open','only the explicit terminal transition releases the lock');
+});
+test('[MODEL] concurrent prepares on one project admit exactly one open publication session',async()=>{
+  // The baseline constructed two real SIDs and relied on commit-time CAS. C34 rejects the
+  // second prepare up front (`publish_session_active`); this is the current strongest form
+  // of the same project-level mutual exclusion.
+  const h=harness(),file=await resolve(h),a=payload({node:'1:1'}),b=payload({node:'2:2'});
+  const results=await Promise.allSettled([h.service.prepare(h.req,body(file,[a.f])),h.service.prepare(h.req,body(file,[b.f]))]);
+  assert.deepEqual(results.map(result=>result.status).sort(),['fulfilled','rejected']);
+  assert.equal(results.find(result=>result.status==='rejected').reason.code,'publish_session_active');
+  assert.equal(h.vault.catalog.publishSessions.length,1);assert.equal(h.vault.catalog.publishSessions[0].status,'open');
+  assert.equal(h.vault.catalog.frameRevisions.length,0);assert.equal(h.vault.catalog.frames.length,1);
+});
 test('[MODEL] permission revoked during physical read prevents commit',async()=>{const h=harness(),{r,p}=await prepared(h);await upload(h,r,p);h.vault.afterRead=async()=>h.revoke();await assert.rejects(h.service.commit(h.req,r.sessionId),code('forbidden'));assert.equal(h.vault.catalog.frameRevisions.length,0);assert.equal(h.vault.catalog.frames.filter(f=>f.state==='published').length,0);});
 test('[MODEL] injected persistence failure publishes no next root',async()=>{const h=harness(),{r,p}=await prepared(h);await upload(h,r,p);const original=h.vault.putOriginal;h.vault.putOriginal=async d=>{const a=await original(d);h.vault.failNext=true;return a;};await assert.rejects(h.service.commit(h.req,r.sessionId),code('injected_save_failure'));assert.equal(h.vault.catalog.frameRevisions.length,0);assert.equal(h.vault.catalog.publishSessions[0].status,'open');});
 test('[MODEL] source mismatch fails before creating SID',async()=>{const h=harness(),file=await resolve(h),p=payload(),b=body(file,[p.f]);b.source={kind:'figma-file',fileKey:'Another'};await assert.rejects(h.service.prepare(h.req,b),code('invalid_source'));assert.equal(h.vault.catalog.publishSessions.length,0);});

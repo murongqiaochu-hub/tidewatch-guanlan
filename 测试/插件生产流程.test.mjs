@@ -173,7 +173,11 @@ test('production strict wrapper rejects demo publish/network and secret-bearing 
 });
 test('C34 custom-https blocks a second publish after unknown prepare without querying or re-preparing', async t => {
   let preparations=0;const {adapter,calls}=memoryAdapter({prepare:async()=>{preparations++;throw new Error('lost');}});const pair=await productionRPC(t,{adapter,production:{serviceMode:'custom-https'}});await pair.connect();
-  const payload={projectId:'p',scope:'selection',scale:1,includeSlices:true,chunkCapacity:16};await assert.rejects(pair.command('publish',payload),{code:'UNKNOWN_PREPARE'});assert.equal(preparations,1);assert.equal((await pair.command('status')).state.phase,'unknownPrepare');const before=calls.length;await assert.rejects(pair.command('publish',payload),{code:'UNKNOWN_COMMIT'});assert.equal(preparations,1);assert.equal(calls.length,before);assert.equal(calls.some(c=>c[0]==='queryOperation'),false);await assert.rejects(pair.command('connect',{service:{origin:'https://elsewhere.example',allowLocalhost:false},namespace}),{code:'UNKNOWN_COMMIT'});
+  // C34 conflict, pending product decision: the baseline locally locked until the server
+  // confirmed an unknown prepare. Current `discardHistory` releases the local lock after
+  // physical completion; the unknown phase plus the custom-https gate are what still
+  // reject a second publish without querying or re-preparing.
+  const payload={projectId:'p',scope:'selection',scale:1,includeSlices:true,chunkCapacity:16};await assert.rejects(pair.command('publish',payload),{code:'UNKNOWN_PREPARE'});assert.equal(preparations,1);const unknown=(await pair.command('status')).state;assert.equal(unknown.phase,'unknownPrepare');assert.equal(unknown.locked,false,'C34 releases only the local lock after physical completion');const before=calls.length;await assert.rejects(pair.command('publish',payload),{code:'UNKNOWN_COMMIT'});assert.equal(preparations,1);assert.equal(calls.length,before);assert.equal(calls.some(c=>c[0]==='queryOperation'),false);await assert.rejects(pair.command('connect',{service:{origin:'https://elsewhere.example',allowLocalhost:false},namespace}),{code:'UNKNOWN_COMMIT'});
 });
 test('partial multi-round cancellation retains confirmed mapping and explicitly reports incomplete task', async () => {
   const {sdk}=sdkModel(2);const {adapter}=memoryAdapter();const commit=adapter.commit;const controller=new AbortController();adapter.commit=async sid=>{const result=await commit(sid);controller.abort();return result;};const session=sessionFor(sdk,adapter);
@@ -403,4 +407,29 @@ test('unknown prepare and unknown commit preserve export counts and block repeat
     assert.deepEqual([session.status().locked, session.status().exportDone, session.status().exportTotal, session.status().done, attempts], [true, 1, 1, 0, 1]);
     assert.equal(session.status().failureStage, method === 'prepare' ? 'preparing' : 'committing');
   }
+});
+
+for (const variant of ['sid', 'batch', 'hash', 'group-presence', 'source-proof']) test(`restored task conflict (${variant}) fails closed without unlocking, reprepare or overwrite`, async () => {
+  const operationId = `op_${'1'.repeat(32)}_${'a'.repeat(64)}`, sessionId = 'sid-1', requestHash = 'b'.repeat(64), frameId = 'platform-2:1', policy = { version: 1, mode: 'adaptive', maxConcurrentUploads: 1, maxInFlightBytes: PRODUCTION_BODY_LIMIT };
+  const saved = { phase: 'unknownCommit', locked: true, verified: false, operationId, projectId: 'p', sessionId, batchIndex: 0, requestHash, batchFrameIds: ['2:1'], expectedFrameIds: ['2:1'], preparedFrames: [{ figmaNodeId: '2:1', frameId }], groupId: null, completed: [], done: 0, total: 1, mappingAvailable: false, source: variant === 'source-proof' ? { kind: 'figma-file', fileKey: 'OriginalKey' } : { kind: 'plugin-launch', namespace } };
+  const server = { sessionId: variant === 'sid' ? 'sid-other' : sessionId, batchIndex: variant === 'batch' ? 1 : 0, requestHash: variant === 'hash' ? 'c'.repeat(64) : requestHash, groupId: variant === 'group-presence' ? undefined : null };
+  const prepared = { sessionId, status: 'open', expiresAt: null, automaticExpiry: false, operationId, batchIndex: 0, requestHash, designFileId: 'file-1', maxUploadBytes: PRODUCTION_BODY_LIMIT, uploadPolicy: policy, missingAssetSha256: [], frames: [{ figmaNodeId: '2:1', frameId, status: 'new', missingAssetSha256: [] }] };
+  const operation = { operationId, projectId: 'p', createdBy: 'u', status: 'open', frameIds: ['2:1'], groupId: server.groupId, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', finishedAt: null, lockScope: 'service', automaticExpiry: false, batches: [{ sessionId, operationId, batchIndex: server.batchIndex, requestHash: server.requestHash, status: 'open', expiresAt: null, automaticExpiry: false, uploaded: [], uploadPolicy: policy, frames: [{ figmaNodeId: '2:1', frameId, status: 'new' }], prepareResult: prepared }], committedFrames: [], remainingFrameIds: ['2:1'] };
+  const calls = [];
+  const { adapter } = memoryAdapter({
+    queryOperation: async op => { calls.push(['operation', op]); return structuredClone(operation); },
+    query: async sid => { calls.push(['query', sid]); return { sessionId: server.sessionId, status: 'committed', expiresAt: null, automaticExpiry: false, operationId, batchIndex: server.batchIndex, requestHash: server.requestHash, uploaded: [], uploadPolicy: policy, frames: [{ figmaNodeId: '2:1', frameId, status: 'committed' }] }; },
+    queryCommitResult: async sid => { calls.push(['result', sid]); return { sessionId: server.sessionId, status: 'committed', frames: [{ figmaNodeId: '2:1', frameId, revisionId: 'rev-1', status: 'new' }] }; }
+  });
+  const session = sessionFor(sdkModel().sdk, adapter); session.restore(saved);
+  if (variant === 'source-proof') {
+    // A terminal query first establishes the mapping phase; the original source proof is
+    // still compared against the live SDK document before the result is accepted.
+    await session.query();
+    await assert.rejects(session.recoverCommit(), error => error.code === 'DOCUMENT_CHANGED');
+  } else await assert.rejects(session.query(), error => error.code === 'HTTP_RESPONSE_INVALID');
+  assert.equal(session.status().locked, true, 'a conflicting restored task must stay fenced');
+  assert.equal(session.status().verified, false); assert.equal(session.status().mappingAvailable, false);
+  assert.equal(calls.some(call => ['prepare', 'upload', 'commit', 'abort'].includes(call[0])), false, 'conflict resolution must never replay a write');
+  assert.equal(calls.every(call => ['operation', 'query', 'result'].includes(call[0])), true);
 });

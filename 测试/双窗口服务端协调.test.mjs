@@ -9,6 +9,7 @@ import { createPlatform } from '../平台/服务.mjs';
 import { openVault } from '../平台/仓库.mjs';
 import { makeProceduralPng } from '../宿主/synthetic-fixtures.mjs';
 import { startProductionPlugin } from '../插件/main.mjs';
+import { createProductionSession } from '../插件/production-session.mjs';
 import { createBridge } from '../插件/bridge.mjs';
 import { CHANNEL } from '../插件/protocol.mjs';
 import { createProductionHTTP, validateProductionOperation, validateProductionOperationResult } from '../插件/production-protocol.mjs';
@@ -126,6 +127,10 @@ test('two stale windows compete at the real server claim and only one publishes'
   const results = await Promise.allSettled([a.command('publish', payload), b.command('publish', payload)]);
   assert.equal(h.claims, 2, 'both windows must actually reach claim HTTP');
   const claims = h.events.filter(e => e.pathname === '/api/publish/operations' && e.method === 'POST');
+  // Baseline required exactly one 2xx and one 409. C34 conflict, pending product decision:
+  // a second window is an explicit new publish with `replacePrevious`, so it may also claim
+  // 2xx and cancel the older operation. The retained invariant is that exactly one task
+  // completes and the other is cancelled without replay; both claims remain 2xx/409 only.
   assert.equal(claims.length, 2); assert.ok(claims.every(e => e.status >= 200 && e.status < 300 || e.status === 409)); assert.ok(claims.some(e => e.status >= 200 && e.status < 300));
   assert.equal(results.filter(r => r.status === 'fulfilled').length, 1); assert.equal(results.filter(r => r.status === 'rejected').length, 1);
   const winner = results.find(r => r.status === 'fulfilled').value;
@@ -133,6 +138,9 @@ test('two stale windows compete at the real server claim and only one publishes'
   const rejected = results.find(r => r.status === 'rejected');
   assert.equal(rejected.reason.code, 'HTTP_FAILED');
   const loser = results[0].status === 'rejected' ? a : b;
+  // C34 conflict with the retired invariant: the losing window no longer keeps a local
+  // `unknownClaim` lock. The server cancelled its operation and the client records a
+  // terminal failure; a later explicit publish is a new operation, never a replay.
   assert.equal(loser.main.status().publisher.phase, 'failed');
   assert.equal(loser.main.status().publisher.httpStatus, 409);
   assert.equal(loser.main.status().publisher.locked, false);
@@ -227,4 +235,74 @@ test('C34 startup retires local journals without server recovery; explicit new p
   const oldOperationPaths = h.events.slice(start).filter(event => event.pathname === `/api/publish/operations/${prior.operationId}` || event.pathname.startsWith(`/api/publish/operations/${prior.operationId}/`) || event.pathname.includes(retiredSid));
   assert.deepEqual(oldOperationPaths, [], 'only the explicit new publish may supersede; no stale receipt/query/abort is sent');
   assert.deepEqual([...storage.values.keys()].sort(), [refreshKey, 'another-plugin'].sort());
+});
+
+function restoredSession(adapter, saved) {
+  const sdk = { root: {}, currentPage: {} };
+  const session = createProductionSession({ sdk, adapter, namespace: `src_window_${'1'.repeat(32)}`, cryptoAPI: webcrypto, exporter: { queue: { snapshot: () => ({ pending: 0 }) }, exportFrames: async () => { throw new Error('read-only recovery must not export'); } } });
+  session.restore(saved);
+  return session;
+}
+const recoveryPolicy = { version: 1, mode: 'adaptive', maxConcurrentUploads: 1, maxInFlightBytes: 25 * 1024 * 1024 };
+
+test('recovery cancellation requires the original actor and current publish permission', { timeout: 30000 }, async t => {
+  const h = await fixture(t, { designerOwner: true });
+  const intent = await h.first.intent(h.project.id);
+  const operationId = intent.operationId;
+  assert.equal((await h.first.claim({ operationId, projectId: h.project.id, frameIds: ['2:1'], groupId: h.group.id })).status, 'open');
+  const operation = () => h.app.vault.catalog.publishOperations.find(row => row.id === operationId);
+  const audits = () => h.app.vault.catalog.auditLogs.filter(row => row.action === 'publish.recover_cancel' && row.target === operationId).length;
+  await assert.rejects(h.admin.recoverCancel(operationId, h.project.id), error => error.status === 404, 'another actor cannot cancel an operation it does not own');
+  assert.equal(operation().status, 'open'); assert.equal(audits(), 0);
+  await h.app.vault.transact(d => d.patch('users', h.ownerId, { role: 'developer' }));
+  await assert.rejects(h.first.recoverCancel(operationId, h.project.id), error => error.status === 403, 'owner must still hold publish permission at cancellation time');
+  assert.equal(operation().status, 'open'); assert.equal(audits(), 0);
+  await h.app.vault.transact(d => d.patch('users', h.ownerId, { role: 'designer' }));
+  const cancelled = await h.first.recoverCancel(operationId, h.project.id);
+  assert.equal(cancelled.status, 'cancelled'); assert.equal(cancelled.operationId, operationId);
+  assert.equal(operation().status, 'cancelled'); assert.equal(audits(), 1);
+  assert.equal(h.app.vault.catalog.publishSessions.length, 0);
+});
+
+test('reopened unknown commit is read-only: only the journaled SID and its result are read, never replayed', { timeout: 30000 }, async t => {
+  const namespace = `src_window_${'1'.repeat(32)}`, operationId = `op_${'a'.repeat(32)}_${'b'.repeat(64)}`, sessionId = 'sid-original', requestHash = 'c'.repeat(64);
+  const prepared = { sessionId, status: 'open', expiresAt: null, automaticExpiry: false, operationId, batchIndex: 0, requestHash, designFileId: 'file-1', maxUploadBytes: 1024 * 1024, uploadPolicy: recoveryPolicy, missingAssetSha256: [], frames: [{ figmaNodeId: '2:1', frameId: 'frame-1', status: 'new', missingAssetSha256: [] }] };
+  const operation = { operationId, projectId: 'p', createdBy: 'u', status: 'open', frameIds: ['2:1', '2:2'], groupId: null, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', finishedAt: null, lockScope: 'service', automaticExpiry: false, batches: [{ sessionId, operationId, batchIndex: 0, requestHash, status: 'open', expiresAt: null, automaticExpiry: false, uploaded: [], uploadPolicy: recoveryPolicy, frames: [{ figmaNodeId: '2:1', frameId: 'frame-1', status: 'new' }], prepareResult: prepared }], committedFrames: [], remainingFrameIds: ['2:1', '2:2'] };
+  const calls = [];
+  const adapter = {
+    async queryOperation(op) { calls.push(['operation', op]); assert.equal(op, operationId); return structuredClone(operation); },
+    async query(sid) { calls.push(['query', sid]); assert.equal(sid, sessionId); return { sessionId, status: 'committed', expiresAt: null, automaticExpiry: false, operationId, batchIndex: 0, requestHash, uploaded: [], uploadPolicy: recoveryPolicy, frames: [{ figmaNodeId: '2:1', frameId: 'frame-1', status: 'committed' }] }; },
+    async queryCommitResult(sid) { calls.push(['result', sid]); assert.equal(sid, sessionId); return { sessionId, status: 'committed', frames: [{ figmaNodeId: '2:1', frameId: 'frame-1', revisionId: 'rev-1', status: 'new' }] }; }
+  };
+  for (const name of ['projects', 'intent', 'claim', 'finish', 'publishSource', 'prepare', 'upload', 'commit', 'abort', 'recoverCancel']) adapter[name] ??= async () => { calls.push([name]); throw new Error('recovery replay is forbidden'); };
+  const session = restoredSession(adapter, { phase: 'unknownCommit', sessionId, operationId, projectId: 'p', source: { kind: 'plugin-launch', namespace }, preparedFrames: [{ figmaNodeId: '2:1', frameId: 'frame-1' }], expectedFrameIds: ['2:1', '2:2'], total: 2, done: 0, completed: [], batchIndex: 0, requestHash, batchFrameIds: ['2:1'], groupId: null, mappingAvailable: false, locked: true });
+  await assert.rejects(session.publish({ projectId: 'p' }), { code: 'UNKNOWN_COMMIT' });
+  assert.deepEqual(calls, [], 'an unresolved task must not dispatch anything automatically');
+  const queried = await session.query();
+  assert.equal(queried.result.sessionId, sessionId); assert.equal(session.status().locked, true);
+  const recovered = await session.recoverCommit();
+  assert.equal(recovered.result.sessionId, sessionId); assert.equal(recovered.result.frames[0].revisionId, 'rev-1');
+  assert.equal(recovered.state.mappingAvailable, true); assert.equal(recovered.state.phase, 'partial', 'a mapping without full task visibility stays incomplete');
+  assert.deepEqual(calls.map(call => call[0]), ['operation', 'query', 'result']);
+  assert.equal(calls.some(call => ['prepare', 'upload', 'commit', 'abort', 'recoverCancel'].includes(call[0])), false, 'recovery must not replay a write');
+});
+
+test('reopened unknown prepare stays locked and only the explicit recover-cancel writes', { timeout: 30000 }, async t => {
+  const namespace = `src_window_${'1'.repeat(32)}`, operationId = `op_${'d'.repeat(32)}_${'e'.repeat(64)}`, requestHash = 'f'.repeat(64);
+  const calls = [];
+  const cancelled = { operationId, projectId: 'p', createdBy: 'u', status: 'cancelled', frameIds: ['2:1'], groupId: null, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', finishedAt: '2026-01-01T00:00:00.000Z', lockScope: 'service', automaticExpiry: false, batches: [], committedFrames: [], remainingFrameIds: ['2:1'] };
+  const adapter = {
+    async queryOperation(op) { calls.push(['operation', op]); assert.equal(op, operationId); return { operationId, projectId: 'p', createdBy: 'u', status: 'open', frameIds: ['2:1'], groupId: null, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', finishedAt: null, lockScope: 'service', automaticExpiry: false, batches: [], committedFrames: [], remainingFrameIds: ['2:1'] }; },
+    async recoverCancel(op, projectId) { calls.push(['recoverCancel', op, projectId]); assert.equal(op, operationId); assert.equal(projectId, 'p'); return structuredClone(cancelled); }
+  };
+  for (const name of ['projects', 'intent', 'claim', 'finish', 'publishSource', 'prepare', 'upload', 'commit', 'query', 'abort', 'queryCommitResult']) adapter[name] ??= async () => { calls.push([name]); throw new Error('recovery replay is forbidden'); };
+  const session = restoredSession(adapter, { phase: 'unknownPrepare', sessionId: null, operationId, projectId: 'p', source: { kind: 'plugin-launch', namespace }, preparedFrames: [], expectedFrameIds: ['2:1'], total: 1, done: 0, completed: [], batchIndex: 0, requestHash, batchFrameIds: ['2:1'], groupId: null, mappingAvailable: false, locked: true });
+  await assert.rejects(session.publish({ projectId: 'p' }), { code: 'UNKNOWN_PREPARE' });
+  const queried = await session.query();
+  assert.equal(queried.result.operationId, operationId); assert.equal(session.status().locked, true);
+  assert.deepEqual(calls.map(call => call[0]), ['operation'], 'a reopened unknown prepare may only read the operation');
+  const aborted = await session.abort();
+  assert.equal(aborted.result.status, 'cancelled'); assert.equal(aborted.state.phase, 'aborted');
+  assert.deepEqual(calls.map(call => call[0]), ['operation', 'recoverCancel']);
+  assert.equal(calls.some(call => ['prepare', 'upload', 'commit', 'abort'].includes(call[0])), false);
 });

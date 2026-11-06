@@ -9,7 +9,7 @@ const html = (await source('插件/ui.html')).toString(), css = (await source('�
 test('visual plugin preserves all actual deployed IDs and explicit non-commercial/local API boundaries',async()=>{
   const baseline=await source('测试/夹具/上线基线插件.html');assert.equal(sha(baseline),'0a0035dc6d06eb31afe3f6c750d1bf96a919805c4cd1c501f4815c7f6306626d');
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(ids.length,new Set(ids).size);
-  for(const [,id] of baseline.toString().matchAll(/\bid="([^"]+)"/g))if(!['production-localhost','production-details','production-source','production-project-refresh','refresh','frame-details','frame-identities','production-raw-source','close','recovery','recovery-note','session-details','session','production-recover-mapping','production-pending-tasks','query','abort'].includes(id) && !id.startsWith('production-source-') && !id.startsWith('production-bind') && !id.startsWith('production-binding-'))assert.ok(ids.includes(id),id);for(const id of ['production-localhost','production-details','production-source'])assert.ok(!ids.includes(id),id);
+  for(const [,id] of baseline.toString().matchAll(/\bid="([^"]+)"/g))if(!['production-localhost','production-details','production-source','production-project-refresh','refresh','frame-details','frame-identities','production-raw-source','close','recovery','recovery-note','session-details','session','production-recover-mapping','query','abort'].includes(id) && !id.startsWith('production-source-') && !id.startsWith('production-bind') && !id.startsWith('production-binding-'))assert.ok(ids.includes(id),id);for(const id of ['production-localhost','production-details','production-source'])assert.ok(!ids.includes(id),id);
   assert.match(html,/name="independent-production" content="disabled"/);assert.match(html,/DRAFT · 新作者表达/);assert.match(html,/不代表已注册／发布的 Figma 插件/);assert.doesNotMatch(html,/https?:\/\/[^\s"<>]+\.(?:css|woff|ttf)/);
 });
 test('visual plugin introduces a real task hierarchy, compact selection and source disclosure instead of stacked generic cards',()=>{
@@ -49,4 +49,18 @@ test('C15 pins project-scoped groups and export corrections while retaining unre
   const startup=(await source('平台/启动.mjs')).toString();assert.match(startup,/artifacts=\{pluginArchive:/);assert.doesNotMatch(startup,/HANDOFF_(?:SOURCE|LEGACY_SOURCE)_ARCHIVE/);
   const ui=(await source('插件/ui.mjs')).toString(),helper=ui.slice(ui.indexOf('function syncPluginPresentation'),ui.indexOf('function frameListIcon'));
   assert.match(helper,/dataset\.taskPhase/);assert.doesNotMatch(helper,/fetch|request\(|storage|publish\(/);assert.match(ui,/state\.locked === true/);assert.match(ui,/password.*value = ''/);
+});
+
+test('C34 retires exactly the documented legacy UI identities and no future deletion silently passes',async()=>{
+  const baseline=(await source('测试/夹具/上线基线插件.html')).toString();
+  const ids=text=>[...new Set([...text.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]))];
+  const baselineIds=ids(baseline),currentIds=new Set(ids(html));
+  // The complete C34 retirement set, including the source-binding/session widgets that
+  // preceded the current task workflow. Pinning it (instead of an open-ended exemption
+  // list) means a future removal of any *other* baseline ID fails this gate again.
+  const retired=['abort','close','frame-details','frame-identities','production-bind-key','production-bind-source','production-binding-error','production-binding-note','production-binding-state','production-details','production-localhost','production-project-refresh','production-raw-source','production-recover-mapping','production-source','production-source-binding','production-source-confirm','production-source-key','production-source-title','production-source-url','query','recovery','recovery-note','refresh','session','session-details'];
+  const missing=baselineIds.filter(id=>!currentIds.has(id)).sort();
+  assert.deepEqual(missing,[...retired].sort(),'only the documented C34 retirement may remove baseline identities');
+  for(const id of retired)assert.ok(!currentIds.has(id),`${id} must be absent, not merely exempted`);
+  for(const id of baselineIds.filter(id=>!retired.includes(id)))assert.ok(currentIds.has(id),`${id} must remain present`);
 });

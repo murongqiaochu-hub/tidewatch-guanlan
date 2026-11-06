@@ -348,3 +348,42 @@ for (const noSubtle of [false, true]) test(`MODEL-SDK + MODEL-DOM compiled main/
   await checkModes(real.canonical); assert.equal((await fs.stat(real.canonical)).mode & 0o777, 0o700);
   assert.equal(firstState.sourceProof, null); // Automatic plugin-launch source has no manual binding proof.
 });
+
+test('MODEL restored source confirmation requires the exact proof, project and current document identity before any write', async () => {
+  const operationId = `op_${'a'.repeat(32)}_${'b'.repeat(64)}`, proof = await sha256(jsonBytes({ kind: 'figma-file', fileKey: key }), webcrypto);
+  const saved = { phase: 'unknownCommit', sessionId: 'original-sid', operationId, projectId: 'p', source: { kind: 'figma-file', fileKey: key }, sourceProof: proof, preparedFrames: [] };
+  const { adapter, calls } = memoryAdapter();
+  const session = sessionFor(modelSDK().sdk, adapter); session.restore(saved);
+  assert.equal(session.status().sourceBinding.mode, 'recovery');
+  await assert.rejects(session.confirmRecoverySource(binding('wrong-project')), { code: 'BAD_SCHEMA' });
+  await assert.rejects(session.confirmRecoverySource(binding('p', 'WrongKey')), { code: 'DOCUMENT_CHANGED' });
+  assert.deepEqual(calls, [], 'source confirmation is RAM-only');
+  const confirmed = await session.confirmRecoverySource(binding());
+  assert.equal(confirmed.state.source.fileKey, key);
+  const mismatch = sessionFor(modelSDK({ fileKey: 'CurrentSDKKey' }).sdk, adapter); mismatch.restore(saved);
+  await assert.rejects(mismatch.confirmRecoverySource(binding()), { code: 'DOCUMENT_CHANGED' });
+});
+
+test('MODEL denied recovery cancellation keeps the original task locked and never reprepares or recommits', async () => {
+  const operationId = `op_${'c'.repeat(32)}_${'d'.repeat(64)}`;
+  let cancels = 0, prepares = 0, commits = 0;
+  const { adapter } = memoryAdapter({
+    recoverCancel: async (op, projectId) => { cancels++; assert.equal(op, operationId); assert.equal(projectId, 'p'); throw Object.assign(new Error('denied'), { code: 'HTTP_FAILED', status: 403 }); },
+    prepare: async () => { prepares++; throw new Error('must not re-prepare'); },
+    commit: async () => { commits++; throw new Error('must not re-commit'); }
+  });
+  const session = sessionFor(modelSDK().sdk, adapter);
+  session.restore({ phase: 'unknownCommit', sessionId: 'original-sid', operationId, projectId: 'p', source: { kind: 'figma-file', fileKey: key }, preparedFrames: [], expectedFrameIds: ['2:1'], total: 1, done: 0, completed: [] });
+  await assert.rejects(session.abort(), error => error.status === 403);
+  assert.equal(session.status().locked, true); assert.equal(session.status().phase, 'unknownCommit'); assert.equal(session.status().httpStatus, 403);
+  assert.deepEqual([cancels, prepares, commits], [1, 0, 0]);
+});
+
+test('C34 main RPC exposes no legacy source recovery entry and never journals a recovery attempt', async t => {
+  const pair = await rpcPair(t, {});
+  await assert.rejects(pair.ui.request('production-source-recovery', binding()), { code: 'BAD_SCHEMA' });
+  const bound = await pair.ui.request('production-source-binding', binding());
+  assert.equal(bound.state.projectId, 'p');
+  assert.deepEqual([...pair.stored.keys()], []);
+  assert.deepEqual(pair.writes, [], 'RAM-only binding must never invoke the persistence journal');
+});
