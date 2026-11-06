@@ -1,8 +1,9 @@
 # 平台服务镜像（候选）。只打包运行时需要的源码；不包含测试、审计、来源记录与本机构建产物。
-# 默认用带版本号的官方 Node 镜像 tag；正式发行时应改为 digest 固定，例如：
-#   docker build --build-arg BASE_IMAGE=node@sha256:<已核验的 manifest digest> -t <image> .
-# 发行前还须核验该基础镜像的发行版、Node 版本、系统包清单与第三方许可，并补齐 NOTICE/SBOM/对应源码。
-ARG BASE_IMAGE=node:22.19.0-bookworm-slim
+# 基础镜像固定为第三方锁/系统覆盖记录核验过的 digest（Node 22.23.3、Debian bookworm、glibc 2.36-9+deb12u14）。
+# 可在构建时覆盖为重新核验过的 digest；不要改回可变 tag。
+# 原生预览所需的编码器（原生编码器/运行时/）与“从服务器下载插件”所需的 plugin.zip 不在本镜像内，
+# 必须由发布流程另行构建并挂载或复制；缺失时对应能力会明确失败，不会伪造成功。
+ARG BASE_IMAGE=node@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392
 FROM ${BASE_IMAGE}
 
 ENV NODE_ENV=production \
