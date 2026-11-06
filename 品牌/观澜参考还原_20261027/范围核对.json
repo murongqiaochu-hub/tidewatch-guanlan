@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-27",
+  "branch": "audit/pre-publication-20261026",
+  "HEAD": "a8d2312384333a5e92e5126edc6b745bd631d17c",
+  "existingDirtyBefore": {
+    "发布审计/README.md": "9834910d1c876571b873b7f09e2cc46b71a29ea7c834856bd2de7fee8d204a6f",
+    "发布审计/20_关键实现复核与修复.md": "b87e89bd2ee0e7dc97592737cb3e76aed7c87f4afe424f5c8adaac6b44614fb5",
+    "发布审计/21_观澜普通安装与人工功能验收草稿.md": "c357bf06bd8bc14a9ac314d8382f295f1e03aeb1daebb9871b2ba459a65484c6"
+  },
+  "existingDirtyAfter": {
+    "发布审计/README.md": "9834910d1c876571b873b7f09e2cc46b71a29ea7c834856bd2de7fee8d204a6f",
+    "发布审计/20_关键实现复核与修复.md": "b87e89bd2ee0e7dc97592737cb3e76aed7c87f4afe424f5c8adaac6b44614fb5",
+    "发布审计/21_观澜普通安装与人工功能验收草稿.md": "c357bf06bd8bc14a9ac314d8382f295f1e03aeb1daebb9871b2ba459a65484c6"
+  },
+  "existingDirtyUnchanged": true,
+  "onlyAddedThisDirectory": true,
+  "newFiles": [
+    "品牌/观澜参考还原_20261027/README.md",
+    "品牌/观澜参考还原_20261027/SHA256SUMS",
+    "品牌/观澜参考还原_20261027/duotone.svg",
+    "品牌/观澜参考还原_20261027/guanlan-brand-assets.zip",
+    "品牌/观澜参考还原_20261027/logo.mjs",
+    "品牌/观澜参考还原_20261027/mono.svg",
+    "品牌/观澜参考还原_20261027/preview.html",
+    "品牌/观澜参考还原_20261027/preview.png",
+    "品牌/观澜参考还原_20261027/reverse.svg",
+    "品牌/观澜参考还原_20261027/showcase.html",
+    "品牌/观澜参考还原_20261027/showcase.png",
+    "品牌/观澜参考还原_20261027/导出展示图.mjs",
+    "品牌/观澜参考还原_20261027/展示图验证.json",
+    "品牌/观澜参考还原_20261027/打包.py",
+    "品牌/观澜参考还原_20261027/生成预览.mjs",
+    "品牌/观澜参考还原_20261027/范围核对.json",
+    "品牌/观澜参考还原_20261027/验证.mjs",
+    "品牌/观澜参考还原_20261027/验证结果.json"
+  ],
+  "trackedDiffStat": "\"\\345\\217\\221\\345\\270\\203\\345\\256\\241\\350\\256\\241/README.md\" | 1 +\n 1 file changed, 1 insertion(+)",
+  "diffCheck": 0,
+  "finalization": "用户已实际看图认可，固定标志；仅离线展示与打包，无应用接入",
+  "finalizationAddedFiles": [
+    "品牌/观澜参考还原_20261027/showcase.html",
+    "品牌/观澜参考还原_20261027/showcase.png",
+    "品牌/观澜参考还原_20261027/导出展示图.mjs",
+    "品牌/观澜参考还原_20261027/展示图验证.json",
+    "品牌/观澜参考还原_20261027/打包.py",
+    "品牌/观澜参考还原_20261027/guanlan-brand-assets.zip"
+  ],
+  "finalizationUpdatedFiles": [
+    "品牌/观澜参考还原_20261027/README.md",
+    "品牌/观澜参考还原_20261027/范围核对.json",
+    "品牌/观澜参考还原_20261027/SHA256SUMS"
+  ],
+  "fixedAssetsAndOriginalQAPreservedSHA256": {
+    "duotone.svg": "af7d71e8b57129fb536c863cf0c2e2e20e79a3bd55e90f174dc6440855201289",
+    "mono.svg": "7a29dbe9d8114c4759c611ac39404f011d8ec1fe592276aa88a138125bb9e292",
+    "reverse.svg": "e45cf09a08a55a5d096fc800f4d7c670427923a6b65754de02bc4de69d944b5c",
+    "logo.mjs": "b4724e2c925a65f721af0f81be3bd5902d60e9587d9e4342f2361376b40386c5",
+    "preview.html": "f1b853daced3051fb55d000f0d8c02880133752da724856fb5b70511b4001fdc",
+    "preview.png": "27367b192515456a247eab7f494646c4a695fbd64bec43194f5ae814314e1734",
+    "生成预览.mjs": "3a695b27673f668653c1555f83d81b260ea27296c471cbb31b9a78e34b47ed14",
+    "验证.mjs": "94ce8b827aea763252e769d6f11d03a33e8dbf9ed2924cfe1e3958a2d0604325",
+    "验证结果.json": "df0d8009d3da85491c610d8712790d8a4d8abc00f3db4fc77781098349f10228"
+  },
+  "zipMembers": [
+    "观澜参考还原_20261027/README.md",
+    "观澜参考还原_20261027/SHA256SUMS",
+    "观澜参考还原_20261027/duotone.svg",
+    "观澜参考还原_20261027/logo.mjs",
+    "观澜参考还原_20261027/mono.svg",
+    "观澜参考还原_20261027/preview.html",
+    "观澜参考还原_20261027/preview.png",
+    "观澜参考还原_20261027/reverse.svg",
+    "观澜参考还原_20261027/showcase.html",
+    "观澜参考还原_20261027/showcase.png",
+    "观澜参考还原_20261027/导出展示图.mjs",
+    "观澜参考还原_20261027/展示图验证.json",
+    "观澜参考还原_20261027/打包.py",
+    "观澜参考还原_20261027/生成预览.mjs",
+    "观澜参考还原_20261027/范围核对.json",
+    "观澜参考还原_20261027/验证.mjs",
+    "观澜参考还原_20261027/验证结果.json"
+  ],
+  "hashManifestExclusions": [
+    "SHA256SUMS",
+    "guanlan-brand-assets.zip"
+  ],
+  "zipHashReporting": "交付回复单独报告 ZIP 本体 SHA-256，不写入包内形成自引用"
+}

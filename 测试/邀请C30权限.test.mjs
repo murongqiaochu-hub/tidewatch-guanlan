@@ -1,0 +1,106 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import http from 'node:http';
+import { randomBytes } from 'node:crypto';
+import { openVault,platformError } from '../平台/仓库.mjs';
+import { createAuthentication } from '../平台/认证.mjs';
+import { createPermissions } from '../平台/权限.mjs';
+import { installAccountsProjects } from '../平台/账户项目.mjs';
+import { createPlatform } from '../平台/服务.mjs';
+async function fixture(t){
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'heron-c30-invite-'));let now=Date.parse('2026-11-02T15:59:00Z');
+ const vault=await openVault({dataDir:dir,clock:()=>now});
+ await vault.transact(d=>{for(const [id,role]of [['admin','admin'],['a','designer'],['b','designer'],['dev','developer']])d.add('users',{id,username:`login-${id}`,displayName:`Display ${id}`,role,status:'active',ownerId:id==='dev'?'b':null,sessionVersion:0});for(const id of ['a','b'])d.add('projects',{id:`p-${id}`,name:`项目${id}`,ownerId:id});});
+ const auth=createAuthentication({vault,secret:randomBytes(48),clock:()=>now}),permissions=createPermissions({vault,clock:()=>now}),routes=[];
+ const service=installAccountsProjects({vault,auth,permissions,clock:()=>now,route(method,regex,handler,options={}){routes.push({method,regex,handler,options});}});
+ const actor=id=>vault.catalog.users.find(u=>u.id===id);
+ const server=http.createServer(async(req,res)=>{try{const route=routes.find(r=>r.method===req.method&&r.regex.test(req.url));if(!route)throw platformError(404,'not_found');if(!route.options.public)auth.actor(req);const chunks=[];for await(const chunk of req)chunks.push(chunk);const bytes=Buffer.concat(chunks),body=bytes.length?JSON.parse(bytes):{},params=route.regex.exec(req.url).groups??{};const result=await route.handler(req,res,{body,params,signal:new AbortController().signal});res.statusCode=route.options.status??200;res.setHeader('Content-Type','application/json');res.end(JSON.stringify(result));}catch(e){res.statusCode=e.status??500;res.setHeader('Content-Type','application/json');res.end(JSON.stringify({error:e.code??e.message}));}});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ async function request(method,url,who='a',body){const r=await fetch(`http://127.0.0.1:${server.address().port}${url}`,{method,headers:{...(who?{Authorization:`Bearer ${auth.issueAccess(actor(who))}`} :{}),'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});return {status:r.status,body:await r.json()};}
+ const create=async(who='a',project='p-a',body={autoLabel:true})=>{const r=await request('POST',`/api/admin/projects/${project}/invites`,who,body);assert.equal(r.status,201,JSON.stringify(r.body));return r.body.invite;};
+ t.after(async()=>{server.closeAllConnections();await new Promise(r=>server.close(r));await vault.close();assert.equal(await fs.realpath(dir),dir);assert.match(path.basename(dir),/^heron-c30-invite-/);await fs.rm(dir,{recursive:true});});
+ return {vault,service,actor,request,create,advance(ms){now+=ms;}};
+}
+test('C30 HTTP global/project scope, admin sees all, developer forbidden and guessed IDs safe',async t=>{
+ const {request,create,vault,service,actor}=await fixture(t),a=await create(),admin=await create('admin'),b=await create('b','p-b');
+ assert.equal(a.creatorName,'login-a');assert.equal(a.projectName,'项目a');assert.equal(a.createdByUserId,'a');
+ assert.deepEqual((await request('GET','/api/admin/invites')).body.invites.map(i=>i.id),[a.id]);
+ assert.equal((await request('GET','/api/admin/invites','admin')).body.invites.length,3);
+ assert.deepEqual(service.listAllInvites(actor('b')).map(i=>i.id),[b.id]);
+ for(const prefix of ['/api/admin/projects','/api/projects'])assert.deepEqual((await request('GET',`${prefix}/p-a/invites`)).body.invites.map(i=>i.id),[a.id]);
+ for(const id of [admin.id,b.id,'guessed'])for(const method of ['PATCH','DELETE'])assert.equal((await request(method,`/api/admin/invites/${id}`,'a',method==='PATCH'?{label:'intrusion'}:undefined)).status,404);
+ for(const prefix of ['/api/admin/projects','/api/projects'])assert.equal((await request('DELETE',`${prefix}/p-a/invites/${admin.id}`)).status,404);
+ for(const [method,url,body]of [['GET','/api/admin/invites'],['GET','/api/admin/projects/p-a/invites/default-label'],['GET','/api/projects/p-a/invites'],['POST','/api/projects/p-a/invites',{}],['PATCH',`/api/admin/invites/${a.id}`,{label:'no'}],['DELETE',`/api/admin/invites/${a.id}`]])assert.equal((await request(method,url,'dev',body)).status,403);
+ assert.equal((await request('GET','/api/admin/invites',null)).status,401);
+ await vault.transact(d=>d.patch('projects','p-a',{ownerId:'b'}));
+ assert.deepEqual(service.listAllInvites(actor('a')),[]);assert.deepEqual(service.listInvites(actor('b'),'p-a'),[]);
+ assert.equal((await request('PATCH',`/api/admin/invites/${a.id}`,'a',{label:'lost manage'})).status,404);
+ assert.equal((await request('PATCH',`/api/admin/invites/${a.id}`,'b',{label:'not creator'})).status,404);
+ assert.equal((await request('PATCH',`/api/admin/invites/${a.id}`,'admin',{label:'admin allowed'})).status,200);
+});
+test('C30 CRUD preserves claims, membership and ownership; revoked/deleted cannot revive',async t=>{
+ const {request,create,vault}=await fixture(t),i=await create('a','p-a',{label:'手填',maxUses:3});
+ assert.equal(i.label,'手填');
+ assert.equal((await request('POST',`/api/invites/${i.rawToken}/claim`,'dev',{})).status,200);
+ assert.equal((await request('POST',`/api/invites/${i.rawToken}/register`,null,{username:'joined-c30',password:'Synthetic-pass-123'})).status,201);
+ assert.equal(vault.catalog.users.find(u=>u.id==='dev').ownerId,'b');assert.equal(vault.catalog.users.find(u=>u.username==='joined-c30').ownerId,'a');
+ assert.equal((await request('PATCH',`/api/admin/invites/${i.id}`,'a',{maxUses:1})).status,400);
+ for(const body of [{},{usesCount:0},{status:'active'},{createdByUserId:'b'},{projectId:'p-b'},{expiresDays:31},{label:'x'.repeat(81)}])assert.equal((await request('PATCH',`/api/admin/invites/${i.id}`,'a',body)).status,400);
+ const updated=await request('PATCH',`/api/admin/invites/${i.id}`,'a',{label:'更新',expiresDays:2,maxUses:2});assert.equal(updated.status,200);assert.equal(updated.body.invite.label,'更新');assert.equal(updated.body.invite.status,'exhausted');assert.equal(updated.body.invite.expiresAt,'2026-11-04T15:59:00.000Z');
+ assert.equal((await request('DELETE',`/api/projects/p-a/invites/${i.id}`)).body.invite.status,'revoked');
+ assert.equal((await request('PATCH',`/api/admin/invites/${i.id}`,'a',{maxUses:20,expiresDays:30})).body.invite.status,'revoked');
+ const claims=JSON.stringify(vault.catalog.inviteClaims),members=JSON.stringify(vault.catalog.projectMembers);
+ assert.deepEqual((await request('DELETE',`/api/admin/invites/${i.id}`)).body,{deleted:true,inviteId:i.id});
+ assert.equal(JSON.stringify(vault.catalog.inviteClaims),claims);assert.equal(JSON.stringify(vault.catalog.projectMembers),members);
+ assert.ok(vault.catalog.projectInvites.find(r=>r.id===i.id).deletedAt);assert.ok(vault.catalog.auditLogs.some(r=>r.action==='project.invite.delete'&&r.inviteId===i.id));
+ assert.deepEqual((await request('GET','/api/admin/invites','admin')).body.invites,[]);
+ for(const method of ['PATCH','DELETE'])assert.equal((await request(method,`/api/admin/invites/${i.id}`,'admin',method==='PATCH'?{expiresDays:30}:undefined)).status,404);
+ for(const [method,url,body]of [['GET',`/api/invites/${i.rawToken}`],['POST',`/api/invites/${i.rawToken}/claim`,{}],['POST',`/api/invites/${i.rawToken}/register`,{username:'no-join',password:'Synthetic-pass-123'}]])assert.equal((await request(method,url,method==='POST'&&url.endsWith('/claim')?'dev':null,body)).status,410);
+});
+test('C30 default labels reserve all creators/deleted/renamed records, concurrent creation and Shanghai midnight',async t=>{
+ const {request,create,service,actor,advance}=await fixture(t),url='/api/admin/projects/p-a/invites/default-label';
+ for(let n=0;n<2;n++)assert.deepEqual((await request('GET',url)).body,{label:'项目a-261102'});
+ const first=await create('admin');assert.equal(first.label,'项目a-261102');
+ await request('PATCH',`/api/admin/invites/${first.id}`,'admin',{label:'renamed'});await request('DELETE',`/api/admin/invites/${first.id}`,'admin');
+ const invites=await Promise.all(Array.from({length:12},(_,n)=>service.createInvite(actor(n%2?'a':'admin'),'p-a',{autoLabel:true})));
+ assert.equal(new Set(invites.map(i=>i.label)).size,12);assert.deepEqual(invites.map(i=>i.label).sort(),Array.from({length:12},(_,n)=>`项目a-261102-${n+1}`).sort());
+ assert.equal((await request('GET',url)).body.label,'项目a-261102-13');
+ advance(60000);assert.equal((await request('GET',url)).body.label,'项目a-261103');assert.equal((await create()).label,'项目a-261103');
+ assert.equal((await request('POST','/api/admin/projects/p-a/invites','a',{autoLabel:'true'})).status,400);
+ assert.equal((await create('a','p-a',{autoLabel:false,label:' kept '})).label,' kept ');
+});
+test('C30 long unicode names remain valid 80 code points including numbering',async t=>{
+ const {vault,create,request}=await fixture(t);await vault.transact(d=>d.patch('projects','p-a',{name:'长'.repeat(90)+'🦢'}));
+ const a=await create(),b=await create();assert.equal([...a.label].length,80);assert.equal([...b.label].length,80);assert.ok(a.label.endsWith('-261102'));assert.ok(b.label.endsWith('-261102-1'));
+ await vault.transact(d=>d.patch('projects','p-a',{name:'🦢'.repeat(64)}));const c=await create();assert.equal([...c.label].length,71);assert.ok(c.label.isWellFormed());
+ const list=(await request('GET','/api/admin/invites','admin')).body.invites;for(const i of list)for(const key of ['tokenHash','rawToken','labelHistory','deletedAt'])assert.equal(i[key],undefined);
+});
+test('C30 full platform HTTP router enforces authenticated contracts and durable deletion',async t=>{
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'heron-c30-platform-'));
+ const platform=await createPlatform({dataDir:dir,secret:'synthetic-c30-secret-32-characters',bootstrapAdmin:{username:'admin',password:'Synthetic-pass-123'},logger:{error(){}}});
+ const address=await platform.listen(0),origin=`http://127.0.0.1:${address.port}`;let cookie='';
+ t.after(async()=>{await platform.close();assert.equal(await fs.realpath(dir),dir);assert.match(path.basename(dir),/^heron-c30-platform-/);await fs.rm(dir,{recursive:true});});
+ const call=async(method,url,body)=>{const r=await fetch(origin+url,{method,headers:{Origin:origin,Cookie:cookie,'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];return {status:r.status,body:await r.json()};};
+ assert.equal((await call('GET','/api/admin/invites')).status,401);
+ assert.equal((await call('POST','/api/auth/login',{username:'admin',password:'Synthetic-pass-123'})).status,200);
+ const p=(await call('POST','/api/projects',{name:'真实HTTP'})).body;
+ assert.equal(typeof (await call('GET',`/api/admin/projects/${p.id}/invites/default-label`)).body.label,'string');
+ const created=await call('POST',`/api/admin/projects/${p.id}/invites`,{autoLabel:true});assert.equal(created.status,201);const id=created.body.invite.id;
+ assert.equal(created.body.invite.creatorName,'admin');assert.equal((await call('GET','/api/admin/invites')).body.invites.length,1);
+ assert.equal((await call('PATCH',`/api/admin/invites/${id}`,{label:'edited'})).body.invite.label,'edited');
+ assert.deepEqual((await call('DELETE',`/api/admin/invites/${id}`)).body,{deleted:true,inviteId:id});
+ assert.equal((await call('GET',`/api/invites/${created.body.invite.rawToken}`)).status,410);
+ const persisted=JSON.parse(await fs.readFile(path.join(dir,'catalog.json'),'utf8'));assert.ok(persisted.projectInvites.find(i=>i.id===id).deletedAt);assert.ok(persisted.projectInvites[0].labelHistory.includes(created.body.invite.label));
+});
+test('C30 legacy creator is never inferred; stable creator checks still block transferred registration',async t=>{
+ const {vault,service,actor,create,request}=await fixture(t),i=await create();
+ await vault.transact(d=>{const source=d.byId('projectInvites',i.id);d.add('projectInvites',{...source,id:'legacy',createdByUserId:null,tokenHash:'synthetic-legacy'});});
+ assert.equal(service.listAllInvites(actor('admin')).length,2);assert.equal(service.listAllInvites(actor('a')).length,1);
+ assert.equal((await request('PATCH','/api/admin/invites/legacy','a',{label:'no'})).status,404);
+ const pending=service.registerInvite(null,i.rawToken,{username:'race-c30',password:'Synthetic-pass-123'});
+ await vault.transact(d=>d.patch('projects','p-a',{ownerId:'b'}));await assert.rejects(pending,e=>e.code==='invite_creator_inactive');
+ assert.equal(vault.catalog.users.some(u=>u.username==='race-c30'),false);assert.equal(vault.catalog.inviteClaims.length,0);
+});

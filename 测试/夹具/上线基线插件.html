@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="figma-parent-origin" content="https://www.figma.com">
+  <meta name="independent-production" content="disabled">
+  <title>Heron Sync</title>
+  <link rel="stylesheet" href="./ui.css">
+</head>
+<body>
+  <main id="app">
+    <header><h1>Heron Sync</h1><button id="close" class="quiet" type="button" aria-label="安全关闭插件">关闭</button></header>
+    <section class="card" id="production-account" hidden aria-labelledby="production-title">
+      <h2 id="production-title">登录交付服务</h2>
+      <form id="production-login-form">
+        <label class="field">服务器地址<input id="production-origin" type="url" required autocomplete="url" placeholder="https://your-service.example"></label>
+        <label class="field">用户名<input id="production-username" required autocomplete="username" maxlength="256"></label>
+        <label class="field">密码<input id="production-password" type="password" required autocomplete="current-password" maxlength="4096"></label>
+        <label class="check"><input id="production-remember" type="checkbox"> 记住此设备</label>
+        <p class="subtle remember-note">仅保存 refresh 凭证，不保存密码或 access token。</p>
+        <details class="connection-options"><summary>连接选项</summary><label class="check"><input id="production-localhost" type="checkbox"> 显式 localhost HTTP（仅开发构建允许）</label><p class="subtle">仅向你明确填写的同一服务发送请求；不使用 Cookie。</p></details>
+        <button id="production-login" type="submit" class="primary full-width">登录</button>
+      </form>
+      <p id="production-auth-status" class="subtle" role="status">未登录</p>
+      <div class="row account-actions"><button id="production-resume" type="button" hidden>使用已记住设备登录</button><button id="production-logout" type="button" disabled>退出并撤销记住设备</button></div>
+      <div id="production-project-fields" hidden>
+        <label class="field" for="production-project">当前项目</label><div class="row"><select id="production-project" disabled aria-label="当前项目"><option value="">登录后读取项目</option></select><button id="production-project-refresh" type="button" class="quiet" disabled>刷新</button></div>
+        <p id="production-permission" class="subtle"></p>
+      </div>
+      <details id="production-details"><summary>高级 / 发布说明</summary><p id="production-source" class="source-notice"></p><p class="subtle">原格式 PNG / JPG / WebP / SVG 兼容；SDK 未支持的格式会明确失败。PDF 不支持生产发布，不转换为 PNG。</p></details>
+    </section>
+    <section class="card" id="production-source-binding" hidden aria-labelledby="production-source-title">
+      <h2 id="production-source-title">当前文件来源</h2>
+      <p id="production-binding-note" class="source-notice">SDK未提供文件标识；这是用户确认绑定，不是官方验证。</p>
+      <p id="production-binding-state" class="subtle" role="status"></p>
+      <label class="field" for="production-source-url">当前打开文件的 Figma HTTPS 链接</label>
+      <input id="production-source-url" type="url" autocomplete="off" maxlength="2048" placeholder="https://www.figma.com/design/…" aria-describedby="production-binding-note production-binding-error">
+      <label class="check source-confirm"><input id="production-source-confirm" type="checkbox">我确认此链接／key 属于当前打开的文件和当前项目</label>
+      <button id="production-bind-source" type="button" class="full-width">绑定当前文件来源</button>
+      <details id="production-raw-source"><summary>高级 / 明确填写 file key</summary><label class="field" for="production-source-key">Figma file key（不是平台文件 ID）</label><input id="production-source-key" autocomplete="off" maxlength="128" spellcheck="false" aria-describedby="production-binding-note production-binding-error"><p class="subtle">仅 1–128 位 ASCII 字母数字，大小写保留；不接受平台 UUID 或节点 ID。</p><button id="production-bind-key" type="button" class="full-width">用明确 key 绑定当前文件来源</button></details>
+      <p id="production-binding-error" class="binding-error" role="alert" hidden></p>
+      <p class="subtle">仅本窗口 RAM 有效，不写设计或记住链接。未绑定也可一次性发布，但每次新窗口会成为不同来源文件。</p>
+    </section>
+    <section class="card" id="frame-selection" aria-labelledby="scope-title">
+      <h2 id="scope-title">选择画板</h2>
+      <div class="row"><label for="scope">范围</label><select id="scope"><option value="selection">当前选择的 FRAME</option><option value="page">当前页全部顶层 FRAME</option></select><button id="refresh" class="quiet" type="button">刷新</button></div>
+      <p id="selection-summary" class="subtle">正在读取画板…</p>
+      <ul id="frames" aria-label="完整画板目录"></ul>
+      <p id="excluded" class="subtle"></p>
+      <div class="row"><label for="scale">PNG 倍率</label><input id="scale" type="number" min="0.001" max="64" step="0.25" value="1"><label class="check"><input id="slices" type="checkbox" checked> 原格式切图</label></div>
+      <details id="frame-details"><summary>高级 / 画板身份</summary><pre id="frame-identities"></pre></details>
+    </section>
+    <details class="card" id="settings"><summary>设置 / 发布服务与身份</summary>
+      <p class="subtle">开发清单默认禁止网络。自定义 HTTPS 服务须先写入开发 manifest 的精确 allowlist；不读取账户、Cookie 或生产凭据。</p>
+      <label class="field">Service origin<input id="origin" type="url" placeholder="https://your-explicit-service.example" autocomplete="off"></label>
+      <label class="check"><input id="localhost" type="checkbox"> 显式启用 localhost 开发 HTTP（仅 loopback）</label>
+      <label class="field">Project ID<input id="project" value="synthetic-project" autocomplete="off"></label>
+      <label class="field">Design file ID（平台 ID，非私有 fileKey）<input id="design-file" value="synthetic-design" autocomplete="off"></label>
+      <label class="field">Page ID（平台 ID）<input id="page" value="synthetic-page" autocomplete="off"></label>
+      <label class="field">期待当前 revision ID（留空表示新画板）<input id="expected-revision" placeholder="空 = null，已有画板需填写当前 revision" autocomplete="off"></label>
+      <p class="subtle">画板平台 ID 由平台身份与 Figma node ID 的 SHA-256 派生，节点原 ID 保留。身份仅是合成开发绑定，不代表旧账户权限。</p>
+    </details>
+    <section class="actions" id="task-actions" aria-label="操作">
+      <button id="export" type="button" class="primary">导出到本地</button><button id="publish" type="button">发布到配置服务</button><button id="cancel" type="button" class="danger" disabled>取消任务</button>
+    </section>
+    <section class="card status" aria-live="polite" aria-atomic="true"><h2>任务状态</h2><p id="status">连接 SDK…</p><p id="progress" class="subtle"></p><div id="recovery" hidden><p id="recovery-note">结果未知：仅查询原会话，不自动重传或再准备。</p><details id="session-details"><summary>会话详情</summary><code id="session"></code></details><div class="row"><button id="query" type="button">查询原会话</button><button id="abort" type="button">确认中止原会话</button><button id="production-recover-mapping" type="button" hidden>取回已提交版本映射</button></div></div><details id="production-result-details" hidden><summary>已提交版本 / 详情</summary><ul id="production-results" hidden aria-label="服务器已确认的版本"></ul></details></section>
+    <section class="card" id="downloads" hidden><h2>导出文件</h2><p class="subtle">下载已请求不等于操作系统已保存。</p><ul id="download-list"></ul></section>
+    <details class="build-details"><summary>高级 / 版本说明</summary><p id="task-diagnostics" class="subtle"></p><p class="disclaimer">DRAFT · 新作者表达，权属条款待核验。当前未完成真实 Figma / Mac 设备验收；不代表已注册／发布的 Figma 插件。</p></details>
+  </main>
+  <aside class="edge left" aria-label="左侧高度控制"><div class="edge-controls"><button type="button" data-resize-direction="1" aria-label="增高 40 像素；上下箭头、Home、End 调节"><span class="triangle up"></span></button><div class="bar" aria-hidden="true"></div><button type="button" data-resize-direction="-1" aria-label="减矮 40 像素"><span class="triangle down"></span></button></div></aside>
+  <aside class="edge right" aria-label="右侧高度控制"><div class="edge-controls"><button type="button" data-resize-direction="1" aria-label="增高 40 像素"><span class="triangle up"></span></button><div class="bar" aria-hidden="true"></div><button type="button" data-resize-direction="-1" aria-label="减矮 40 像素"><span class="triangle down"></span></button></div></aside>
+  <script type="module" src="./ui.mjs"></script>
+</body>
+</html>

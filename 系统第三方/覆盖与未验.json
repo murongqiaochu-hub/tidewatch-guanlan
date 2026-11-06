@@ -1,0 +1,27 @@
+{
+  "imageID": "sha256:acb7775f8d4921c0b593282f9f199944ecdc4fe39c42c2e94b4f477be652ea5f",
+  "baseImage": "node@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392",
+  "dpkgBinaryPackages": 88,
+  "exactDebianSourcePackages": 63,
+  "exactDebianSourcesPrepared": 63,
+  "nodeVersion": "22.23.3",
+  "nodeInstalledPackageJsonComponents": 198,
+  "npm196PackageVersionsMatchNodePreferredSource": true,
+  "noticeTextsFromImage": 390,
+  "missingPackageCopyright": [],
+  "sourceArchiveVersionsMismatch": [],
+  "lgplActualCompatibleBytesDifferentReplacement": "PASS",
+  "missingExactDebianSourceVersions": [],
+  "unknownOrUnverified": [
+    "PGP signatures for Debian DSC and Node release are not independently verified; SHA256 matching is not signature verification",
+    "OS per-file aggregate license expressions remain NOASSERTION; actual full copyright texts are preserved",
+    "Corepack/Yarn bundles may embed additional transitive modules beyond package.json discovery; whole bundle notices and upstream preferred-source tags/lockfiles are preserved, no semantic deminification completeness claim",
+    "Original base/helper build commits and full OS/Node source rebuild not performed",
+    "Final EULA, third-party exceptions, recipient /source availability, ownership/branding/device acceptance remain Parent/user gates; not legal clearance"
+  ],
+  "commercialReleaseCleared": false,
+  "runtimeGlibcVersion": "2.36-9+deb12u14",
+  "nativeGlibcCorrespondingSourceVersion": "2.36-9+deb12u14",
+  "nativeGlibcRuntimeVerified": "docker create (no start) + docker cp libc.so.6 + strings: GNU C Library (Debian GLIBC 2.36-9+deb12u14)",
+  "nativeGlibcU13RetainedAsHistory": "原生编码器/第三方源码/历史u13/"
+}

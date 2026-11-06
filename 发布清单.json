@@ -1,0 +1,110 @@
+{
+  "mode": "WRITE",
+  "sourceCommit": "a8d2312384333a5e92e5126edc6b745bd631d17c",
+  "sourceClean": false,
+  "profile": "public-code-only",
+  "generatedAt": "2026-11-06T04:40:25.482Z",
+  "fileCount": 561,
+  "totalBytes": 43814653,
+  "totalMiB": 41.78,
+  "topLevel": {
+    ".gitignore": 1,
+    "CONTRIBUTING.md": 1,
+    "LICENSE.DRAFT.md": 1,
+    "NOTICE.md": 1,
+    "README.md": 1,
+    "SECURITY.md": 1,
+    "package.json": 1,
+    "原生编码器": 53,
+    "发布审计": 2,
+    "品牌": 19,
+    "宿主": 10,
+    "平台": 19,
+    "插件": 17,
+    "来源记录": 23,
+    "构建": 6,
+    "查看器": 4,
+    "测试": 108,
+    "界面": 3,
+    "系统第三方": 283,
+    "部署与运维": 7
+  },
+  "findings": {
+    "count": 14,
+    "blocking": 0,
+    "informational": 14,
+    "items": [
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/交付打包完整性.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/商店自建服务器隔离.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/域名自动适配.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/平台暗色网页.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/插件内网HTTP.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/插件发布桥.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/插件发行防回归.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/插件登录失败反馈.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/插件登录恢复界面.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/插件编译启动生命周期.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/插件自建HTTPS发行.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/构建独立平台.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/构建生产模式.test.mjs",
+        "severity": "info"
+      },
+      {
+        "kind": "LAN IPv4",
+        "path": "测试/构建编译.test.mjs",
+        "severity": "info"
+      }
+    ]
+  },
+  "blocked": false
+}

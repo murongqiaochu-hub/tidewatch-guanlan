@@ -1,0 +1,41 @@
+# 平台服务容器编排（候选）。Dockerfile 与 Compose 路径已在隔离 NAS Docker 验证；不构成生产就绪或公开发行批准。
+# 使用前先在 .env 里写入精确的 HTTPS 来源，例如 https://tidewatch.example.com
+name: tidewatch-guanlan
+
+services:
+  platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tidewatch-guanlan:local
+    restart: unless-stopped
+    user: "10001:10001"
+    environment:
+      HANDOFF_DATA_DIR: /data
+      HANDOFF_HOST: 0.0.0.0
+      HANDOFF_PORT: "4318"
+      # 反向代理终止 TLS 时必须用 fixed + 精确 HTTPS origin，
+      # 服务端据此判断请求是否安全；它不读取 X-Forwarded-Proto。
+      HANDOFF_ORIGIN_MODE: fixed
+      HANDOFF_PUBLIC_ORIGIN: ${HANDOFF_PUBLIC_ORIGIN:?请在 .env 中设置精确 HTTPS 来源，例如 https://tidewatch.example.com}
+      HANDOFF_JWT_SECRET_FILE: /run/secrets/jwt
+      HANDOFF_ADMIN_PASSWORD_FILE: /run/secrets/admin-password
+    volumes:
+      - tidewatch-data:/data
+      # 密钥以文件绑定挂载：必须是 0600、属主 10001:10001 的普通文件。
+      - ./secrets:/run/secrets:ro
+    # 只监听回环，由同机反向代理对外提供 HTTPS。
+    ports:
+      - "127.0.0.1:4318:4318"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+volumes:
+  tidewatch-data:

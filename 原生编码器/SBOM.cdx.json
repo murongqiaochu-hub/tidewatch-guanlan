@@ -1,0 +1,200 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "bom-ref": "heron-native-codec",
+      "name": "heron-native-codec",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "expression": "NOASSERTION"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "libpng",
+      "name": "libpng",
+      "version": "1.6.39-2+deb12u5",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "Libpng"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://www.libpng.org/pub/png/libpng.html"
+        }
+      ],
+      "properties": [
+        {
+          "name": "distribution",
+          "value": "private dynamic library"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "libjpeg-turbo",
+      "name": "libjpeg-turbo",
+      "version": "2.1.5-2",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "IJG"
+          }
+        },
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        },
+        {
+          "license": {
+            "id": "Zlib"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://github.com/libjpeg-turbo/libjpeg-turbo"
+        }
+      ],
+      "properties": [
+        {
+          "name": "distribution",
+          "value": "private dynamic library"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "libwebp",
+      "name": "libwebp",
+      "version": "1.2.4-0.2+deb12u1",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://chromium.googlesource.com/webm/libwebp/"
+        }
+      ],
+      "properties": [
+        {
+          "name": "distribution",
+          "value": "private dynamic library"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "zlib",
+      "name": "zlib",
+      "version": "1.2.13.dfsg-1",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "Zlib"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://zlib.net/"
+        }
+      ],
+      "properties": [
+        {
+          "name": "distribution",
+          "value": "private dynamic library"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "glibc",
+      "name": "glibc",
+      "version": "2.36-9+deb12u14",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-2.1-or-later"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://www.gnu.org/software/libc/"
+        }
+      ],
+      "properties": [
+        {
+          "name": "distribution",
+          "value": "host prerequisite; not bundled"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "heron-native-codec",
+      "dependsOn": [
+        "libpng",
+        "libjpeg-turbo",
+        "libwebp",
+        "glibc"
+      ]
+    },
+    {
+      "ref": "libpng",
+      "dependsOn": [
+        "zlib",
+        "glibc"
+      ]
+    },
+    {
+      "ref": "libjpeg-turbo",
+      "dependsOn": [
+        "glibc"
+      ]
+    },
+    {
+      "ref": "libwebp",
+      "dependsOn": [
+        "glibc"
+      ]
+    },
+    {
+      "ref": "zlib",
+      "dependsOn": [
+        "glibc"
+      ]
+    },
+    {
+      "ref": "glibc",
+      "dependsOn": []
+    }
+  ]
+}

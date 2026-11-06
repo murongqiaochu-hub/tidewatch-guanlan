@@ -1,0 +1,98 @@
+{
+  "imageID": "sha256:acb7775f8d4921c0b593282f9f199944ecdc4fe39c42c2e94b4f477be652ea5f",
+  "semantics": "bytes-different compatible ELF copies; same ABI, trailing non-loadable metadata appended; mechanism, not legal opinion",
+  "libraries": [
+    {
+      "name": "libc.so.6",
+      "sourcePath": "/lib/x86_64-linux-gnu/libc.so.6",
+      "originalBytes": 1926232,
+      "replacementBytes": 1926282,
+      "originalSha256": "6b4a45352fd0c540a9c7c718f35ce8c8e46a4e482f9d3885a910c32d1a0e1421",
+      "replacementSha256": "7d2b60a88c37d33b442ca8e003ac6508a4ab1f67f5b343ab6151a4a8cc8b85a7",
+      "actualBytesDiffer": true
+    },
+    {
+      "name": "libm.so.6",
+      "sourcePath": "/lib/x86_64-linux-gnu/libm.so.6",
+      "originalBytes": 911904,
+      "replacementBytes": 911954,
+      "originalSha256": "7f2ca87f652f56b094462474b076749e90e689d0ecb9cb63c7679820b271b4e7",
+      "replacementSha256": "2374c57db6f81696c9b50c8ba3995c8eb0c133501deac587eb5c12d5576f94bf",
+      "actualBytesDiffer": true
+    },
+    {
+      "name": "libpng16.so.16",
+      "sourcePath": "/frozen-runtime/lib/libpng16.so.16",
+      "originalBytes": 219056,
+      "replacementBytes": 219111,
+      "originalSha256": "5518ea5152046061f30bc1b49598e393acc7c0799dcb216b6703a6d27597deab",
+      "replacementSha256": "aa7265b78f3e90e685628f9f16e2e363a3051a4ec9e69449c624930a1c531143",
+      "actualBytesDiffer": true
+    },
+    {
+      "name": "libjpeg.so.62",
+      "sourcePath": "/frozen-runtime/lib/libjpeg.so.62",
+      "originalBytes": 600128,
+      "replacementBytes": 600182,
+      "originalSha256": "dad87949ccad2be7e40a02986306087fdcfb35ccaadd59aea923a3f96d290eec",
+      "replacementSha256": "d3b22bc28e91329b8b8c83dc769dd8c5e625ba11fae9992d3cc423bd99f32c4c",
+      "actualBytesDiffer": true
+    },
+    {
+      "name": "libwebp.so.7",
+      "sourcePath": "/frozen-runtime/lib/libwebp.so.7",
+      "originalBytes": 453240,
+      "replacementBytes": 453293,
+      "originalSha256": "4fedb320592cad963eab7f598d3acf3fa9054a2ccffac95bc97085b134ffdc3e",
+      "replacementSha256": "0b582559cc4154985a2489d98a960b791eebfbc40f01f0139877c96730eb9c04",
+      "actualBytesDiffer": true
+    },
+    {
+      "name": "libz.so.1",
+      "sourcePath": "/frozen-runtime/lib/libz.so.1",
+      "originalBytes": 121280,
+      "replacementBytes": 121330,
+      "originalSha256": "7e2a72b4c4b38c61e6962de6e3f4a5e9ae692e732c68deead10a7ce2135a7f68",
+      "replacementSha256": "1bb71cc54cd8bd143a34ce37ed44edae3dc3aedee048e6c539827607f02c7dc6",
+      "actualBytesDiffer": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "real JPEG full decode using replacement libc/libm/private4",
+      "status": "PASS",
+      "decoded": {
+        "width": 64,
+        "height": 48,
+        "decoded": true,
+        "checksum": "07d0cedac2ec3448"
+      }
+    },
+    {
+      "name": "partial PNG 6x258 every RGBA exact using replacement libraries",
+      "status": "PASS",
+      "samples": 6192
+    }
+  ],
+  "frozenBefore": "879f4313a7e652777ef1ea9c4778182a237783d8c6b7c98c1864daca640ef7ce",
+  "sourceBefore": "caf396d2ddef56987aca133f3952d028df2c6876ad8cebe61e83d7f8a5d002b9",
+  "sourceAfter": "caf396d2ddef56987aca133f3952d028df2c6876ad8cebe61e83d7f8a5d002b9",
+  "frozenAfter": "879f4313a7e652777ef1ea9c4778182a237783d8c6b7c98c1864daca640ef7ce",
+  "sourceShaUnchanged": true,
+  "frozenShaUnchanged": true,
+  "diagnostics": {
+    "configured": true,
+    "identity": "heron-native-1-rgba-samples-white-q82-bilinear-3fdf472f4574f4c29ba6a1fa54cdc5b44fede2f4872ac905330558268223f982",
+    "active": 0,
+    "globalActive": 0,
+    "globalPeak": 1,
+    "queued": 0,
+    "spawned": 2,
+    "physicallyClosed": 2,
+    "completed": 2,
+    "licenseStatus": "third-party-notices-provided-not-legal-clearance",
+    "semantics": "unmanaged-source-samples; native PNG preserves 8/16-bit; JPEG alpha white; EXIF not rotated"
+  },
+  "status": "PASS",
+  "ownedTemporaryRemoved": true
+}

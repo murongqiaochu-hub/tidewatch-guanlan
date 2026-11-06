@@ -1,0 +1,16 @@
+{
+  "name": "tidewatch-guanlan-candidate",
+  "version": "0.2.0-independent-development",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 测试/*.test.mjs",
+    "start": "node 平台/启动.mjs",
+    "demo": "node 宿主/demo-server.mjs",
+    "build": "node 构建/build.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

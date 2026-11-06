@@ -1,0 +1,21 @@
+/* Host-only frame for the revision Inspector. 观澜墨绿主题（2026-10-27）。 */
+:root {
+  color-scheme: dark;
+  --host-bg: #0b2026;
+  --host-panel: #112b32;
+  --host-raised: #15343b;
+  --host-border: #20464d;
+  --host-border-strong: #35616a;
+  --host-text: #eaf3f1;
+  --host-secondary: #b4cdc9;
+  --host-muted: #93b3ae;
+  --host-accent: #8fd9c4;
+}
+html,body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: var(--host-bg); color: var(--host-text); }
+body { font-family: 'SF Pro Text','PingFang SC','Noto Sans CJK SC','Microsoft YaHei',system-ui,sans-serif; }
+#inspector-root { height: 100dvh; max-height: 100dvh; min-height: 0; overflow: hidden; }
+#inspector-root:empty::before { display: block; padding: 24px; content: '正在加载受权画板版本…'; color: var(--host-muted); font-size: 13px; }
+dialog,input,select,textarea { color-scheme: dark; background: var(--host-panel); color: var(--host-text); border: 1px solid var(--host-border); }
+:is(a,button,input,select,textarea,summary) { min-height: 44px; }
+:is(a,button,input,select,textarea,summary):focus-visible { outline: 2px solid var(--host-accent); outline-offset: 2px; }
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior: auto; } *,*::before,*::after { transition: none !important; animation: none !important; } }

@@ -1,0 +1,48 @@
+{
+  "browser": "Chrome/153.0.8010.47",
+  "scope": "isolated file:// assets only",
+  "externalRequests": [],
+  "checks": {
+    "svgCount": 32,
+    "viewBox": true,
+    "paths": true,
+    "names": true,
+    "noEmbeddedRaster": true,
+    "sizes": true,
+    "componentName": true,
+    "decorative": true,
+    "currentColor": true,
+    "bounds": [
+      {
+        "x": 0,
+        "y": 0,
+        "width": 510,
+        "height": 263
+      },
+      {
+        "x": 245,
+        "y": 179,
+        "width": 262,
+        "height": 177.8338623046875
+      },
+      {
+        "x": 0,
+        "y": 334,
+        "width": 509,
+        "height": 145
+      },
+      {
+        "x": 0,
+        "y": 231,
+        "width": 455,
+        "height": 155
+      }
+    ],
+    "insideViewBox": true
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390,
+    "pass": true
+  }
+}

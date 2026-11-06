@@ -1,0 +1,11 @@
+# 只把运行时需要的源码送进构建上下文；测试、审计、来源记录、品牌素材和本机构建产物都不进镜像。
+*
+!package.json
+!平台/
+!查看器/
+!界面/
+!品牌/identity.mjs
+!品牌/guanlan-logo.mjs
+!宿主/production-adapter.mjs
+!宿主/production-shell.css
+!宿主/stored-zip.mjs

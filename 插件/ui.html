@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="figma-parent-origin" content="https://www.figma.com">
+  <meta name="independent-production" content="disabled">
+  <title>{{BRAND_PLUGIN_NAME}}</title>
+  <link rel="stylesheet" href="./ui.css">
+</head>
+<body>
+  <main id="app" class="plugin-workspace">
+    <header class="plugin-header">
+      <div class="plugin-brand">{{BRAND_LOGO_SVG}}<div><h1>{{BRAND_PRODUCT}}</h1><span class="brand-caption">{{BRAND_SUBTITLE}}</span></div></div>
+      <details id="production-account-menu" class="account-menu" hidden><summary aria-label="账户与连接说明" title="账户与连接说明">账户</summary><div id="production-account-menu-content"></div></details>
+      <details class="build-details"><summary aria-label="关于与使用说明" title="关于与使用说明">关于</summary><div class="build-menu-body"><p id="task-diagnostics" class="subtle"></p><p class="disclaimer">DRAFT · 新作者表达，权属条款待核验。当前未完成真实 Figma / Mac 设备验收；不代表已注册／发布的 Figma 插件。</p></div></details>
+    </header>
+    <ol class="workflow-steps" aria-label="发布步骤"><li class="step-connection"><span>01</span>项目</li><li class="step-selection"><span>02</span>画板</li><li class="step-publish"><span>03</span>发布</li></ol>
+    <section class="connection-block" id="production-account" hidden aria-labelledby="production-title">
+      <div class="section-heading"><h2 id="production-title">登录交付服务</h2></div>
+      <form id="production-login-form">
+        <label class="field">服务器地址<input id="production-origin" type="url" required autocomplete="url" placeholder="https://your-service.example"></label>
+        <div class="credentials-grid"><label class="field">用户名<input id="production-username" required autocomplete="username" maxlength="256"></label><label class="field">密码<input id="production-password" type="password" required autocomplete="current-password" maxlength="4096"></label></div>
+        <div class="remember-row"><label class="check"><input id="production-remember" type="checkbox" checked>自动登录</label></div>
+        <button id="production-login" type="button" class="primary full-width">登录</button>
+      </form>
+      <div id="production-login-status-slot"><div id="production-account-state" class="account-state"><p id="production-auth-status" class="subtle" role="status">未登录</p><div class="row account-actions"><button id="production-resume" type="button" hidden>重新登录</button><button id="production-logout" type="button" class="quiet" disabled>退出登录</button></div></div></div>
+    </section>
+    <section id="production-project-page" class="production-page project-page" role="region" aria-label="选择项目" hidden>
+      <div class="page-toolbar"><button id="production-project-back" type="button" class="quiet">← 返回</button><h2>选择项目</h2><button id="production-page-create-project" type="button" class="quiet">＋ 新建项目</button></div>
+      <label class="field project-search" for="production-project-search">搜索项目<input id="production-project-search" type="search" placeholder="按名称查找" autocomplete="off"></label>
+      <div class="project-page-body"><div id="production-project-options" class="project-options" role="list" aria-label="项目"></div></div>
+      <div id="production-create-popover" class="project-modal-scrim" hidden><div class="project-create-popover" role="dialog" aria-modal="true" aria-labelledby="production-create-title"><div class="modal-heading"><h3 id="production-create-title">新建项目</h3><button id="production-create-cancel" type="button" class="quiet icon-button" aria-label="关闭新建项目">×</button></div><label class="field" for="production-create-name">项目名称<input id="production-create-name" maxlength="128" autocomplete="off" placeholder="输入项目名称"></label><p id="production-create-error" role="alert" hidden></p><div class="modal-actions"><button id="production-create-submit" type="button" class="primary">确认</button></div></div></div>
+    </section>
+    <section id="production-group-page" class="production-page group-page" role="region" aria-label="选择分组" hidden>
+      <div class="page-toolbar"><button id="production-group-back" type="button" class="quiet">← 返回</button><h2>选择分组</h2><button id="production-page-create-group" type="button" class="quiet">＋ 新建分组</button></div>
+      <div id="production-group-options" class="group-options" role="list" aria-label="项目内分组"></div>
+      <div id="production-group-popover" class="project-modal-scrim" hidden><div class="project-create-popover" role="dialog" aria-modal="true" aria-labelledby="production-group-title"><div class="modal-heading"><h3 id="production-group-title">新建分组</h3><button id="production-group-cancel" type="button" class="quiet icon-button" aria-label="关闭新建分组">×</button></div><label class="field" for="production-group-name">分组名称<input id="production-group-name" maxlength="128" autocomplete="off" placeholder="输入分组名称"></label><p id="production-group-error" role="alert" hidden></p><div class="modal-actions"><button id="production-group-submit" type="button" class="primary">确认</button></div></div></div>
+    </section>
+    <section class="task-status" id="production-progress-page" aria-live="polite" aria-atomic="true"><h2 id="production-progress-title" tabindex="-1">正在上传</h2><div class="task-state-line"><span class="state-indicator" aria-hidden="true"></span><p id="status">正在连接设计工具…</p></div><div class="task-visual-progress" id="task-visual-progress" role="group" aria-label="发布进度" hidden><div class="progress-ring" id="progress-ring" aria-hidden="true"><span id="progress-ring-text">—</span><span id="progress-ring-caption">画板导出</span><span id="progress-ring-phase">画板解析中</span></div><div class="progress-flow"><p id="progress" class="subtle"></p><ol id="progress-stages" class="progress-stages" aria-label="发布阶段"><li data-progress-stage="exporting">导出</li><li data-progress-stage="preparing">准备</li><li data-progress-stage="uploading">上传</li><li data-progress-stage="committing">提交</li></ol></div></div><ul id="production-progress-frames" aria-label="本次画板导出进度"></ul><details id="production-result-details" hidden><summary>发布结果</summary><ul id="production-results" hidden aria-label="服务器已确认的版本"></ul></details><button id="production-progress-back" type="button" hidden>返回画板选择</button></section>
+    <section class="selection-panel" id="frame-selection" aria-labelledby="scope-title">
+      <h2 id="scope-title" class="sr-only">画板选择</h2>
+      <div class="design-multiplier"><span class="design-multiplier-label" id="design-multiplier-label">设计倍数</span><select id="design-spec" aria-labelledby="design-multiplier-label" aria-label="规范"><option value="web">Web</option><option value="ios">iOS</option><option value="android">Android</option></select><select id="design-scale" aria-labelledby="design-multiplier-label" aria-label="倍数"><option value="1">@1x</option><option value="2">@2x</option><option value="3">@3x</option></select></div>
+      <div id="production-project-fields" class="project-rows" hidden>
+        <div class="project-row"><span class="project-row-label" id="production-project-label">项目</span><div class="project-picker"><select id="production-project" hidden aria-hidden="true" tabindex="-1"><option value="">登录后读取项目</option></select><button id="production-project-open" type="button" aria-labelledby="production-project-label production-project-current" aria-expanded="false" aria-controls="production-project-page" disabled><span id="production-project-current">登录后读取项目</span><svg class="project-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><button id="production-project-create" type="button" class="quiet icon-button" hidden disabled aria-label="新建项目" title="新建项目">＋</button></div></div>
+        <div class="project-row"><span class="project-row-label" id="production-group-label">分组</span><button id="production-group-open" type="button" class="project-value" aria-labelledby="production-group-label production-group-current" aria-controls="production-group-page"><span id="production-group-current">未分组</span><svg class="project-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div>
+        <p id="production-permission" class="subtle"></p>
+      </div>
+      <p id="selection-summary" class="sr-only" role="status"></p>
+      <ul id="frames" aria-label="画板列表"></ul>
+      <div id="excluded" hidden></div>
+      <div class="scope-radios" role="radiogroup" aria-label="上传范围">
+        <label><input id="scope-page" type="radio" name="upload-scope" value="page">该页全部画板</label>
+        <label><input id="scope-selection" type="radio" name="upload-scope" value="selection" checked>选中画板<span id="scope-count" class="scope-count">（0）</span></label>
+      </div>
+      <select id="scope" hidden aria-hidden="true" tabindex="-1"><option value="selection">选中画板</option><option value="page">该页全部画板</option></select>
+    </section>
+    <section class="actions task-dock" id="task-actions" aria-label="操作"><button id="export" type="button" class="primary">导出到本地</button><button id="publish" type="button">上传</button><button id="cancel" type="button" class="danger" disabled>取消任务</button></section>
+    <section class="workspace-settings" id="workspace-settings" aria-label="设置">
+      <button id="production-settings-toggle" type="button" class="quiet" aria-expanded="false" aria-controls="workspace-settings-panel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" stroke="currentColor" stroke-width="1.6"></path><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.2 3h-4.4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.4 2.6h4.4l.4-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg>设置</button>
+      <div id="workspace-settings-panel" class="settings-popover" hidden><label class="check"><input id="slices" type="checkbox" checked>原格式切图</label><input id="scale" type="number" min="0.001" max="64" step="0.25" value="1" hidden aria-hidden="true" tabindex="-1"></div>
+    </section>
+    <details class="developer-settings" id="settings"><summary>开发连接设置</summary>
+      <p class="subtle">开发清单默认禁止网络。自定义HTTPS服务须先写入开发manifest的精确allowlist；不读取账户、Cookie或生产凭据。</p>
+      <label class="field">服务器地址<input id="origin" type="url" placeholder="https://your-explicit-service.example" autocomplete="off"></label>
+      <label class="check"><input id="localhost" type="checkbox">显式启用 localhost 开发 HTTP（仅 loopback）</label>
+      <label class="field">项目绑定值<input id="project" autocomplete="off"></label>
+      <label class="field">设计文件绑定值<input id="design-file" autocomplete="off"></label>
+      <label class="field">页面绑定值<input id="page" autocomplete="off"></label>
+      <label class="field">当前画板版本（新画板留空）<input id="expected-revision" placeholder="新画板留空，已有画板请填写当前版本" autocomplete="off"></label>
+      <p class="subtle">请填写准确的交付目标；开发连接不会更改设计或授予账户权限。</p>
+    </details>
+    <section class="download-panel" id="downloads" hidden><h2>导出文件</h2><p class="subtle">下载已请求不等于操作系统已保存。</p><ul id="download-list"></ul></section>
+  </main>
+  <div class="plugin-resize-edge" id="plugin-resize-edge" role="separator" aria-label="拖动插件底部边缘调整高度；方向键、Home、End 可调节" aria-orientation="horizontal" tabindex="0"><span aria-hidden="true"></span></div>
+  <script type="module" src="./ui.mjs"></script>
+</body>
+</html>

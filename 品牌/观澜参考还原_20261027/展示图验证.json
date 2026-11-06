@@ -1,0 +1,14 @@
+{
+  "browser": "Chrome/153.0.8010.47",
+  "scope": "showcase.html local file:// only; original QA and preview untouched",
+  "externalRequests": [],
+  "checks": {
+    "width": 1600,
+    "height": 900,
+    "noOverflow": true,
+    "onlyWordmarks": true,
+    "fixedGeometry": true,
+    "noRaster": true,
+    "noRemoteResources": true
+  }
+}

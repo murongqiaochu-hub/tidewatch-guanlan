@@ -1,0 +1,22 @@
+# Caddy 反向代理样例：自动申请与续期 TLS 证书，把 HTTPS 请求转给本机 4318。
+# 用法：把站点域名换成你的域名后，用 caddy run --config Caddyfile 启动。
+# 注意：服务端按精确 origin 校验来源，代理必须保留原始 Host 与 Origin，不要改写或删除。
+
+tidewatch.example.com {
+	encode zstd gzip
+
+	# 请求体上限要覆盖单个资源上传上限（平台为 64 MiB/资源）。
+	request_body {
+		max_size 128MB
+	}
+
+	reverse_proxy 127.0.0.1:4318 {
+		# 保留浏览器发来的原始 Host。
+		header_up Host {host}
+		# 大图上传达不到 64 MiB 的默认读超时也一并放宽。
+		transport http {
+			read_timeout 300s
+			write_timeout 300s
+		}
+	}
+}

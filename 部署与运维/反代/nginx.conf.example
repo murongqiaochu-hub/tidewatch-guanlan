@@ -1,0 +1,36 @@
+# nginx 反向代理样例。证书路径按实际签发方式替换（示例用 certbot 默认目录）。
+# 服务端按精确 origin 校验来源：必须保留原始 Host 与 Origin，不要用 proxy_set_header 覆盖它们，
+# 也不要给应用转发 X-Forwarded-Proto 期望其生效——应用不读取该头。
+
+server {
+    listen 80;
+    server_name tidewatch.example.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name tidewatch.example.com;
+
+    ssl_certificate     /etc/letsencrypt/live/tidewatch.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/tidewatch.example.com/privkey.pem;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+
+    # 平台单资源上传上限为 64 MiB，这里留出行头余量。
+    client_max_body_size 128m;
+    client_body_timeout  300s;
+
+    location / {
+        proxy_pass http://127.0.0.1:4318;
+        proxy_http_version 1.1;
+
+        # 保留原始 Host；Origin 由 nginx 默认透传，不要覆盖为固定值。
+        proxy_set_header Host $host;
+        proxy_set_header Connection "";
+
+        proxy_read_timeout    300s;
+        proxy_send_timeout    300s;
+        proxy_request_buffering off;
+    }
+}

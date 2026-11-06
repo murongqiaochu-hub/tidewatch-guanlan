@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "architecture": "linux-x86_64-glibc",
+  "baseImage": "node@sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392",
+  "compiler": "Debian gcc 12.2.0-14+deb12u1",
+  "artifacts": [
+    {
+      "path": "依赖包/libjpeg62-turbo-dev_2.1.5-2_amd64.deb",
+      "sha256": "10485411f751c24472c43b28fe24ab6389fedb027d496bbc2c831496f750ab01",
+      "bytes": 289644,
+      "url": "https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+    },
+    {
+      "path": "依赖包/libjpeg62-turbo_2.1.5-2_amd64.deb",
+      "sha256": "95ec30140789a342add8f8371ed018924de51b539056522b66f207b25cba9cad",
+      "bytes": 166332,
+      "url": "https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg62-turbo_2.1.5-2_amd64.deb"
+    },
+    {
+      "path": "依赖包/libpng-dev_1.6.39-2+deb12u5_amd64.deb",
+      "sha256": "25649c413d02092ae7b1093a3c3ee54cbd2d4fdb0a0494787e434ccf0905903f",
+      "bytes": 360472,
+      "url": "https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+    },
+    {
+      "path": "依赖包/libpng16-16_1.6.39-2+deb12u5_amd64.deb",
+      "sha256": "a56d64bfaa9da12aafb83347909e62e6fd5fd251e6b34c194065911a30359978",
+      "bytes": 276660,
+      "url": "https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+    },
+    {
+      "path": "依赖包/libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb",
+      "sha256": "a9d07a8423e462babc947dd5745875a58c450fd5ca5c4493dbabe17387f97d89",
+      "bytes": 400448,
+      "url": "https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+    },
+    {
+      "path": "依赖包/libwebp7_1.2.4-0.2+deb12u1_amd64.deb",
+      "sha256": "7259b7ce46444694ce536360ad53acb68eb3b47a7ff81d7b1b8a3939b2ac9918",
+      "bytes": 285512,
+      "url": "https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp7_1.2.4-0.2+deb12u1_amd64.deb"
+    },
+    {
+      "path": "依赖包/zlib1g-dev_1.2.13.dfsg-1_amd64.deb",
+      "sha256": "f9ce531f60cbd5df37996af9370e0171be96902a17ec2bdbd8d62038c354094f",
+      "bytes": 916272,
+      "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+    },
+    {
+      "path": "依赖包/zlib1g_1.2.13.dfsg-1_amd64.deb",
+      "sha256": "d7dd1d1411fedf27f5e27650a6eff20ef294077b568f4c8c5e51466dc7c08ce4",
+      "bytes": 86684,
+      "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib1g_1.2.13.dfsg-1_amd64.deb"
+    },
+    {
+      "path": "第三方源码/libjpeg-turbo_2.1.5-2.debian.tar.xz",
+      "sha256": "cdb2433c2f7101345c1ffa14efb943787c675b86354691a32490845fe4bc9237",
+      "bytes": 107768,
+      "url": "https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg-turbo_2.1.5-2.debian.tar.xz"
+    },
+    {
+      "path": "第三方源码/libjpeg-turbo_2.1.5-2.dsc",
+      "sha256": "d718ead0dfbcbc8523665c02a7f7152e31039ded641d022868722623bb3b486d",
+      "bytes": 2493,
+      "url": "https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg-turbo_2.1.5-2.dsc"
+    },
+    {
+      "path": "第三方源码/libjpeg-turbo_2.1.5.orig.tar.gz",
+      "sha256": "254f3642b04e309fee775123133c6464181addc150499561020312ec61c1bf7c",
+      "bytes": 2264471,
+      "url": "https://deb.debian.org/debian/pool/main/libj/libjpeg-turbo/libjpeg-turbo_2.1.5.orig.tar.gz"
+    },
+    {
+      "path": "第三方源码/libpng1.6_1.6.39-2+deb12u5.debian.tar.xz",
+      "sha256": "ab14906eda9fddf14cbb1e589b9ba7439c22e233dc3c5e3cf9356c9625565a82",
+      "bytes": 49904,
+      "url": "https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng1.6_1.6.39-2+deb12u5.debian.tar.xz"
+    },
+    {
+      "path": "第三方源码/libpng1.6_1.6.39-2+deb12u5.dsc",
+      "sha256": "7b86211030a34deb6b0a2cd7e1d9db0fe92443fd30cab537fb89b1e7f7c9f188",
+      "bytes": 2292,
+      "url": "https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng1.6_1.6.39-2+deb12u5.dsc"
+    },
+    {
+      "path": "第三方源码/libpng1.6_1.6.39.orig.tar.gz",
+      "sha256": "a00e9d2f2f664186e4202db9299397f851aea71b36a35e74910b8820e380d441",
+      "bytes": 1519415,
+      "url": "https://deb.debian.org/debian/pool/main/libp/libpng1.6/libpng1.6_1.6.39.orig.tar.gz"
+    },
+    {
+      "path": "第三方源码/libwebp_1.2.4-0.2+deb12u1.debian.tar.xz",
+      "sha256": "69cdba4dfe2e1b34d55fa80c1b29c31cacd40dd183812d6bcca7e508a2f7afcd",
+      "bytes": 12028,
+      "url": "https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp_1.2.4-0.2+deb12u1.debian.tar.xz"
+    },
+    {
+      "path": "第三方源码/libwebp_1.2.4-0.2+deb12u1.dsc",
+      "sha256": "d9ed0b59e2010f255c28d0869fd15b31f9b08aed757bfc91862d43aa9ec1aa99",
+      "bytes": 2411,
+      "url": "https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp_1.2.4-0.2+deb12u1.dsc"
+    },
+    {
+      "path": "第三方源码/libwebp_1.2.4.orig.tar.gz",
+      "sha256": "7bf5a8a28cc69bcfa8cb214f2c3095703c6b73ac5fba4d5480c205331d9494df",
+      "bytes": 4141376,
+      "url": "https://deb.debian.org/debian/pool/main/libw/libwebp/libwebp_1.2.4.orig.tar.gz"
+    },
+    {
+      "path": "第三方源码/zlib_1.2.13.dfsg-1.debian.tar.xz",
+      "sha256": "f66cf3d4f2d7defcd4d1fd1fb0a11ee39f1e01b42ec7d059c9dc5c1695133c44",
+      "bytes": 15700,
+      "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib_1.2.13.dfsg-1.debian.tar.xz"
+    },
+    {
+      "path": "第三方源码/zlib_1.2.13.dfsg-1.dsc",
+      "sha256": "3fa1e6b2fc525062aa88207dda52fed8e045373c809d362fe8a2bfbf7cf515a8",
+      "bytes": 2399,
+      "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib_1.2.13.dfsg-1.dsc"
+    },
+    {
+      "path": "第三方源码/zlib_1.2.13.dfsg.orig.tar.bz2",
+      "sha256": "71feb7947e3c00ef125f83b79a4e529bde31171e5babe48b391f06758d1ab0a1",
+      "bytes": 1239825,
+      "url": "https://deb.debian.org/debian/pool/main/z/zlib/zlib_1.2.13.dfsg.orig.tar.bz2"
+    },
+    {
+      "path": "第三方源码/glibc_2.36-9+deb12u14.debian.tar.xz",
+      "sha256": "cf4ac9cd98185452cae3ef34e2e4ee12753e3d93fd0c62c61396d4a47eec902f",
+      "bytes": 918488,
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/glibc_2.36-9+deb12u14.debian.tar.xz"
+    },
+    {
+      "path": "第三方源码/glibc_2.36-9+deb12u14.dsc",
+      "sha256": "cfe1f0b8dc1fa211ce5a45b3725cc38b29f88667f1140ebdca6de35cf9c6f1fd",
+      "bytes": 9765,
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/glibc_2.36-9+deb12u14.dsc"
+    },
+    {
+      "path": "第三方源码/glibc_2.36.orig.tar.xz",
+      "sha256": "a543c02070d46ccaf866957efd13f10c924daa74c86a90a0254db09a92a708ee",
+      "bytes": 19363988,
+      "url": "https://deb.debian.org/debian/pool/main/g/glibc/glibc_2.36.orig.tar.xz"
+    }
+  ],
+  "runtimeLibraries": [
+    "libpng16.so.16",
+    "libjpeg.so.62",
+    "libwebp.so.7",
+    "libz.so.1"
+  ],
+  "systemLibraries": [
+    "libc.so.6",
+    "libm.so.6",
+    "ld-linux-x86-64.so.2"
+  ],
+  "gplOptionalRuntimeComponents": [],
+  "runtimeGlibcCorrespondingSourceVersion": "2.36-9+deb12u14",
+  "runtimeGlibcVerification": {
+    "method": "docker create (no start) + docker cp /lib/x86_64-linux-gnu/libc.so.6 + strings",
+    "observed": "GNU C Library (Debian GLIBC 2.36-9+deb12u14) stable release version 2.36.",
+    "image": "sha256:c6c40250b69896f87057efbe53f8002fc0b177bc5fef09113a8bd18061822a77",
+    "verifiedAt": "2026-10-26"
+  },
+  "historicalMaterials": {
+    "glibcU13": {
+      "path": "第三方源码/历史u13/",
+      "reason": "superseded corresponding source, retained as history",
+      "notUsedAtRuntime": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Independent Inspector · Development (not an upstream official plugin)",
+  "id": "REPLACE_WITH_YOUR_REGISTERED_FIGMA_DEVELOPMENT_PLUGIN_ID",
+  "api": "1.0.0",
+  "main": "main.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"],
+    "devAllowedDomains": ["http://localhost:4188", "http://127.0.0.1:4188"]
+  }
+}
