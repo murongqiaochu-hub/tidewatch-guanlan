@@ -1,0 +1,886 @@
+{
+ "schemaVersion": 1,
+ "description": "构建头文件文件级清单：来源为 dependencies.lock.json 锁定的 8 个 Debian bookworm deb，由 dpkg-deb -x 可逐字节重建。",
+ "generatedFrom": "dependencies.lock.json",
+ "entries": [
+  {
+   "path": "lib/x86_64-linux-gnu/libz.so.1",
+   "type": "symlink",
+   "target": "libz.so.1.2.13"
+  },
+  {
+   "path": "lib/x86_64-linux-gnu/libz.so.1.2.13",
+   "type": "file",
+   "bytes": 121280,
+   "sha256": "7e2a72b4c4b38c61e6962de6e3f4a5e9ae692e732c68deead10a7ce2135a7f68",
+   "sourcePackage": "zlib1g_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/bin/libpng-config",
+   "type": "symlink",
+   "target": "libpng16-config"
+  },
+  {
+   "path": "usr/bin/libpng16-config",
+   "type": "file",
+   "bytes": 2471,
+   "sha256": "9c9adc14ed6e74d6e70c6c1dde583c464c4d6745fed2b14e8b937f0e06b238cb",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/include/jerror.h",
+   "type": "file",
+   "bytes": 15864,
+   "sha256": "cac7d2a363027412fcc06a993623135fb644c70c250a1f8fc5bf0741255212e4",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/include/jmorecfg.h",
+   "type": "file",
+   "bytes": 14192,
+   "sha256": "fce3a180e48bb49a5f8f5965a840b34774e7f194a8b3ba9159c7d5d39b347835",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/include/jpegint.h",
+   "type": "file",
+   "bytes": 15782,
+   "sha256": "40131598f3c8d4bbe7b02a24de104f16ad3edf09d13da55da7ba9d01603ffecf",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/include/jpeglib.h",
+   "type": "file",
+   "bytes": 50281,
+   "sha256": "b51cc0cb5ac082465004dc89422ebda439b053fdffbcf6baf8a6336a3288759f",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/include/libpng",
+   "type": "symlink",
+   "target": "libpng16"
+  },
+  {
+   "path": "usr/include/libpng16/png.h",
+   "type": "file",
+   "bytes": 142869,
+   "sha256": "225765212f3b591f8baee8a4e668a6edeea2c4f7f6268e889e10c0048835c7a5",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/include/libpng16/pngconf.h",
+   "type": "file",
+   "bytes": 22806,
+   "sha256": "fff118e3bc5ba3bba41392c44eff6fdaf96750c0d8751b0ea4fb6c58fcc39c01",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/include/libpng16/pnglibconf.h",
+   "type": "file",
+   "bytes": 7602,
+   "sha256": "d8c14450ffdd3a710c41a5a7ec77b1be7aef7f6b35df4c1976431fa3d485e63b",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/include/png.h",
+   "type": "symlink",
+   "target": "libpng16/png.h"
+  },
+  {
+   "path": "usr/include/pngconf.h",
+   "type": "symlink",
+   "target": "libpng16/pngconf.h"
+  },
+  {
+   "path": "usr/include/pnglibconf.h",
+   "type": "symlink",
+   "target": "libpng16/pnglibconf.h"
+  },
+  {
+   "path": "usr/include/webp/decode.h",
+   "type": "file",
+   "bytes": 23710,
+   "sha256": "8bfc41523c5beb70c1c34c8f538132426062826801b4dca4ff6f9d788bd3360f",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/include/webp/demux.h",
+   "type": "file",
+   "bytes": 15603,
+   "sha256": "c37bd27299d984b7d9ee564bf25873f6620a0a6a0975e44adf0abeed628999af",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/include/webp/encode.h",
+   "type": "file",
+   "bytes": 28010,
+   "sha256": "f5c2b687b7be49635afb07ddc3fb69402eb9ab990449c6a5400537537bacf9c4",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/include/webp/mux.h",
+   "type": "file",
+   "bytes": 22833,
+   "sha256": "3c1db467a27b7bc26f1848f493af1a36366cbc488535b7d84779cc78e60c9f95",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/include/webp/mux_types.h",
+   "type": "file",
+   "bytes": 3193,
+   "sha256": "624d40af94f4b842ccdd8dcc14a198b40703e167e4323719d2d16320c941f81b",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/include/webp/types.h",
+   "type": "file",
+   "bytes": 2106,
+   "sha256": "4024d5cf933f270cd8f58aebc4c08c4a1480281a166fb7633b5785f2acc2944a",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/include/x86_64-linux-gnu/jconfig.h",
+   "type": "file",
+   "bytes": 1089,
+   "sha256": "0b497572f3f81ca58b94719b1559898852632cd3cc4b882c387d4b06e90ebf62",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/include/zconf.h",
+   "type": "file",
+   "bytes": 16589,
+   "sha256": "f333e19c8c4d93a85ee5be1b517c6b875af3e417d50c9e1d10b47f6406028d6c",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/include/zlib.h",
+   "type": "file",
+   "bytes": 97323,
+   "sha256": "a980a0d104198a53cc220c51ab5856e5be901bec8a2d02e0ee79a8754219dfed",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libjpeg.a",
+   "type": "file",
+   "bytes": 835038,
+   "sha256": "95c321db0af7de626802cbff36926c83c2f04d1081ded19fecd754b8982b3735",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libjpeg.so",
+   "type": "symlink",
+   "target": "libjpeg.so.62"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libjpeg.so.62",
+   "type": "symlink",
+   "target": "libjpeg.so.62.3.0"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libjpeg.so.62.3.0",
+   "type": "file",
+   "bytes": 600128,
+   "sha256": "dad87949ccad2be7e40a02986306087fdcfb35ccaadd59aea923a3f96d290eec",
+   "sourcePackage": "libjpeg62-turbo_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libpng.a",
+   "type": "symlink",
+   "target": "libpng16.a"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libpng.so",
+   "type": "symlink",
+   "target": "libpng16.so"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libpng16.a",
+   "type": "file",
+   "bytes": 357290,
+   "sha256": "70975ec2f12815ad324423bf5c7ebde0fb385dd0ceb6f93578986f0a20cd048a",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libpng16.so",
+   "type": "symlink",
+   "target": "libpng16.so.16.39.0"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libpng16.so.16",
+   "type": "symlink",
+   "target": "libpng16.so.16.39.0"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libpng16.so.16.39.0",
+   "type": "file",
+   "bytes": 219056,
+   "sha256": "5518ea5152046061f30bc1b49598e393acc7c0799dcb216b6703a6d27597deab",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebp.a",
+   "type": "file",
+   "bytes": 771530,
+   "sha256": "547b74c883fc2e160f85cef594378b4661d046c6e6da86a7dc6c201f86d5235b",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebp.so",
+   "type": "symlink",
+   "target": "libwebp.so.7.1.5"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebp.so.7",
+   "type": "symlink",
+   "target": "libwebp.so.7.1.5"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebp.so.7.1.5",
+   "type": "file",
+   "bytes": 453240,
+   "sha256": "4fedb320592cad963eab7f598d3acf3fa9054a2ccffac95bc97085b134ffdc3e",
+   "sourcePackage": "libwebp7_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebpdemux.a",
+   "type": "file",
+   "bytes": 16746,
+   "sha256": "98c898cecb6b201a8b22977c4796a5d525f25505bfd168a0a09b0154d9feb5c9",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebpdemux.so",
+   "type": "symlink",
+   "target": "libwebpdemux.so.2.0.11"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebpmux.a",
+   "type": "file",
+   "bytes": 53976,
+   "sha256": "570fb0de7b4970baf6b907005d6ea262e0fa2ea7c2f2cb3310887c381ccd9533",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libwebpmux.so",
+   "type": "symlink",
+   "target": "libwebpmux.so.3.0.10"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libz.a",
+   "type": "file",
+   "bytes": 148862,
+   "sha256": "b5a4f0439559010349877f4100e6f704185840d0cc02cd3adaf49e4d4bf51b29",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/libz.so",
+   "type": "symlink",
+   "target": "/lib/x86_64-linux-gnu/libz.so.1.2.13"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/pkgconfig/libjpeg.pc",
+   "type": "file",
+   "bytes": 238,
+   "sha256": "581a3b56a66988c7b710006c417d10d0da346c12d30383052930dc78485093b7",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/pkgconfig/libpng.pc",
+   "type": "symlink",
+   "target": "libpng16.pc"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/pkgconfig/libpng16.pc",
+   "type": "file",
+   "bytes": 279,
+   "sha256": "87622fb23d85508cce4326ade745cf13c62b598e667672ba568d7f99d2acebc0",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/pkgconfig/libwebp.pc",
+   "type": "file",
+   "bytes": 250,
+   "sha256": "e87c9f6bd03d92780c4628cc2235e08b65859d4d22f25528efe0c6c04d9fcc49",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/pkgconfig/libwebpdemux.pc",
+   "type": "file",
+   "bytes": 285,
+   "sha256": "cafd255810f87d996d361a47ff18451774b7d270f231e2ab3de40b1041a5def7",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/pkgconfig/libwebpmux.pc",
+   "type": "file",
+   "bytes": 304,
+   "sha256": "aa5ecbfbf7061ed87ba7e7462a57f1e75af2a5f02cf022150139baf1b5c076c3",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/lib/x86_64-linux-gnu/pkgconfig/zlib.pc",
+   "type": "file",
+   "bytes": 265,
+   "sha256": "b9aeecae6bd3ad1db7cbd90ce0ec9f8b4685ecc9a351bb7a3f5567b39f148cf4",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc-base/libpng16-16.libpng16",
+   "type": "file",
+   "bytes": 1367,
+   "sha256": "4df0644bbc0e206506fa8804d84c149a6d6773573182826d0282b8498f98bda3",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/README.ijg.gz",
+   "type": "file",
+   "bytes": 5464,
+   "sha256": "1b9d0e884f908bb39539eca293de5e09ba0776eddc95a945b507c417f3a654f7",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/README.md.gz",
+   "type": "file",
+   "bytes": 6367,
+   "sha256": "84aa81762a1a8455fcecf869b57c592f72d4f6bd6bead54ffa43962d55740e84",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 3789,
+   "sha256": "5b3a3f43e3a477dd211ed6d7c2a9df568e5436fe73c3d22f7642757379e684a1",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/changelog.gz",
+   "type": "file",
+   "bytes": 5578,
+   "sha256": "2f800f60705fd357feb5c12b60415795dbaf0eb9ac257af51b5a0f63c26c813d",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/copyright",
+   "type": "file",
+   "bytes": 38846,
+   "sha256": "3821184e23385bf2cdc01f56bd999b34036fc3aa03d5135d41680374eb81bf8a",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/example.txt.gz",
+   "type": "file",
+   "bytes": 6462,
+   "sha256": "4eedfe9a8c17d173ff2d452301604072042dce21444dffcc53ef2a28ba97661e",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/examples/tjexample.c",
+   "type": "file",
+   "bytes": 15062,
+   "sha256": "1d3c15ede89a6bb0951d5f08393107966f66971156fd817f4f9f665ad04d8894",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/libjpeg.txt.gz",
+   "type": "file",
+   "bytes": 52593,
+   "sha256": "62e7b2bb18cde30c6647c396b19a3054d2b8d1a51ea96c1eed5b2e32b801e9ee",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/structure.txt.gz",
+   "type": "file",
+   "bytes": 17094,
+   "sha256": "509ced60633e168b24597b92904c3d7ffc4604a7dba44f3d04d7b34727b9ce60",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/usage.txt.gz",
+   "type": "file",
+   "bytes": 11711,
+   "sha256": "55f119df73b676a7e00be13c84ef25ad1c034138a9ec29bcb00f3991b73c4a17",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo-dev/wizard.txt.gz",
+   "type": "file",
+   "bytes": 3842,
+   "sha256": "f5fad8903c703dab86853095c1c5c839bcfbd83fbd2aefb52b627fa2fceb8b1c",
+   "sourcePackage": "libjpeg62-turbo-dev_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 3789,
+   "sha256": "9eb6c18b2b57ebf103d0351942a852af3c7f35f21b3657be4f343439aa21d3a1",
+   "sourcePackage": "libjpeg62-turbo_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo/changelog.gz",
+   "type": "file",
+   "bytes": 29007,
+   "sha256": "55c3cf5fc6edfe7b6f48787ddc841b06a884c9477311e28d7d4e2d0eb4b359cf",
+   "sourcePackage": "libjpeg62-turbo_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libjpeg62-turbo/copyright",
+   "type": "file",
+   "bytes": 38846,
+   "sha256": "3821184e23385bf2cdc01f56bd999b34036fc3aa03d5135d41680374eb81bf8a",
+   "sourcePackage": "libjpeg62-turbo_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng-dev/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 1434,
+   "sha256": "a5d50564321054bb304f67881be97d08f71dd968baca9fb4338228057e0e4b0b",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng-dev/changelog.gz",
+   "type": "file",
+   "bytes": 98110,
+   "sha256": "5b95faca110d931b43efeaf7875b6a4c77c5f31fc55c5e88c898e003b1f69b2c",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng-dev/copyright",
+   "type": "file",
+   "bytes": 12976,
+   "sha256": "68bd3997355bc44ccb97ff5e2bb146360e762c7d9c721945a4fabf77d1349e4a",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng-dev/examples/example.c",
+   "type": "file",
+   "bytes": 40410,
+   "sha256": "cf620835ea84cf982467692e30dfb5b1c9601667bb0a6a6e5537f71c4578223c",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng-dev/examples/pngtest.c",
+   "type": "file",
+   "bytes": 62815,
+   "sha256": "e7716f944127052151e3dedb5c287b8920bca1b15d8321349567fb0309bf54ae",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng-dev/examples/pngtest.png",
+   "type": "file",
+   "bytes": 8759,
+   "sha256": "8e594ce5a89317ac7cad6fba3f5d23766ecebf5a0e37dcc4fd11adff305a87fd",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng16-16/ANNOUNCE",
+   "type": "file",
+   "bytes": 1443,
+   "sha256": "b6e72b56b44cfa6d8018644a06ebd2810d5a7b0244bc70e514952da3c4dfe08c",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng16-16/README.gz",
+   "type": "file",
+   "bytes": 3674,
+   "sha256": "5c68710fb92a4539ecd2479063d739a03b64e36dad3d06def137710d943b848b",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng16-16/TODO",
+   "type": "file",
+   "bytes": 1026,
+   "sha256": "0207fad4e633e252abee1a9b0695220f1aa25e7940575fc1df3fd9d221f3df5a",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng16-16/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 1436,
+   "sha256": "ae3d769dc86ba0a3c005cc50e490b0fe52c15ef6ed54dc23620d6d616281bed5",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng16-16/changelog.gz",
+   "type": "file",
+   "bytes": 98110,
+   "sha256": "5b95faca110d931b43efeaf7875b6a4c77c5f31fc55c5e88c898e003b1f69b2c",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng16-16/copyright",
+   "type": "file",
+   "bytes": 12976,
+   "sha256": "68bd3997355bc44ccb97ff5e2bb146360e762c7d9c721945a4fabf77d1349e4a",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libpng16-16/libpng-manual.txt.gz",
+   "type": "file",
+   "bytes": 71613,
+   "sha256": "7ef41cdb5b9bd15db26da527fce178a8f6796977b0b6f2eb789edeb44cef9b80",
+   "sourcePackage": "libpng16-16_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/AUTHORS",
+   "type": "file",
+   "bytes": 2542,
+   "sha256": "64baabd8cf3859d548c1e79b950b60afe2434e2b8c277a980c7fc3191400bb8f",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/CONTRIBUTING.md",
+   "type": "file",
+   "bytes": 1180,
+   "sha256": "b4e1fd23c11f4b6a4413b5d4a67ca0d459cc113223c43a28f58fa85c3598af96",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/NEWS.gz",
+   "type": "file",
+   "bytes": 4638,
+   "sha256": "8cb64b2668b61ea3250bfd6a9814e1a49ba640a4873ac520b1b8cf5876926654",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/PATENTS",
+   "type": "file",
+   "bytes": 1436,
+   "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/README.md",
+   "type": "file",
+   "bytes": 1586,
+   "sha256": "4ab9f65e8a6b7d893ec5ac86fe971e85ce36ff2753b29ce5a40ac71fc26c668a",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 1451,
+   "sha256": "c3723fd3116390034a828a9e585d69ebf2507800bf3b940ddf3829865067125a",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/changelog.gz",
+   "type": "file",
+   "bytes": 87157,
+   "sha256": "ddceba589dfae88a81cf46f4575133915cfca705c6fd97315838e982c38ab212",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/copyright",
+   "type": "file",
+   "bytes": 2027,
+   "sha256": "01eb328708a9454061dd13931b19135e1c2c6251a7e6a6d0efc4b9bc436109c7",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/doc/api.md.gz",
+   "type": "file",
+   "bytes": 4688,
+   "sha256": "547f5f06cd4c27471819292bf5a5ccf8b30dd80435e12039ec4a717e23b5c0a0",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/doc/building.md.gz",
+   "type": "file",
+   "bytes": 2214,
+   "sha256": "872d041dc4e9c10b1fddeb305982a8db021454cae6213c04744f4d7c9b6daf8a",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/doc/specs_generation.md",
+   "type": "file",
+   "bytes": 983,
+   "sha256": "863b396a65d1b7f01aa577f0b9ec9a2666e568f4fd417ef502690c8b3a0ad4e7",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/doc/template.html",
+   "type": "file",
+   "bytes": 1929,
+   "sha256": "8bdd4c5474fde09539a42829df23d3c497e679be11cf2d99d3d17f4e950a95f1",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/doc/tools.md.gz",
+   "type": "file",
+   "bytes": 6283,
+   "sha256": "46308c2da39748f517d83042dfb11056ad35b9ab7a0bd3dfb4c39d25b19ce6e1",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/doc/webp-container-spec.txt.gz",
+   "type": "file",
+   "bytes": 8044,
+   "sha256": "d28b215c2166f5edfa9e158d2176ce471a61873ceae60ee53835cc488b14f888",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp-dev/doc/webp-lossless-bitstream-spec.txt.gz",
+   "type": "file",
+   "bytes": 13533,
+   "sha256": "5af1e894e9f6a222e0a3f072d4044a8744a5f592d2dbfb15910f6c0d6fcbba6c",
+   "sourcePackage": "libwebp-dev_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp7/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 1450,
+   "sha256": "c0f5af3f195b2fcd2a5e6c370d68881575773004e959f256388ecb3e1a783b9d",
+   "sourcePackage": "libwebp7_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp7/changelog.gz",
+   "type": "file",
+   "bytes": 87157,
+   "sha256": "ddceba589dfae88a81cf46f4575133915cfca705c6fd97315838e982c38ab212",
+   "sourcePackage": "libwebp7_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/libwebp7/copyright",
+   "type": "file",
+   "bytes": 2027,
+   "sha256": "01eb328708a9454061dd13931b19135e1c2c6251a7e6a6d0efc4b9bc436109c7",
+   "sourcePackage": "libwebp7_1.2.4-0.2+deb12u1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/FAQ.gz",
+   "type": "file",
+   "bytes": 6609,
+   "sha256": "4b5123e906f14feab6bb87899057cc3ac8af39aab070bee5110524572ed85516",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/README.gz",
+   "type": "file",
+   "bytes": 2550,
+   "sha256": "02f1025050ea052d905eeeae9b325bb31810d9560d125fee8bf8ef08d9a95a05",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/algorithm.txt.gz",
+   "type": "file",
+   "bytes": 3879,
+   "sha256": "46798dc1582d5b6f05b5b72fba853002aea3913c3a72a52a8638a172e34a7ac3",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 1045,
+   "sha256": "fc5e04e6fb19d768b3124b7e0fbe37b538dff61d2a6ad64462c758e811db4921",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/changelog.gz",
+   "type": "file",
+   "bytes": 29091,
+   "sha256": "b5d879c91dbaedb48c342bc8560ddcf29b472bbe0a7aaff6d622741a86ac199f",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/copyright",
+   "type": "file",
+   "bytes": 2927,
+   "sha256": "9e5b96d63773a5d177ba264254390f792be07e41748ebd94730981c6cac31cc6",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/crc-doc.1.0.pdf.gz",
+   "type": "file",
+   "bytes": 721681,
+   "sha256": "191b66921f5bcbb22663a2bb7f01b0c43cb86e62bc6cd9e4f9f420d95b040d3a",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/README.examples",
+   "type": "file",
+   "bytes": 1970,
+   "sha256": "1bc1c677bbebe1aa5e85015bb62f0cf3fcdbf95652d30494159bee6166c1854a",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/enough.c",
+   "type": "file",
+   "bytes": 24856,
+   "sha256": "c14a257c60bbe0d65bb54746dd97774a1853ef9e3f78db118a27d8bc0d26d738",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/example.c",
+   "type": "file",
+   "bytes": 16889,
+   "sha256": "64ae90d60b40a8aec4700e5c4e7a71898ebb92948b7a07f939b3e763cb3e8b35",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/fitblk.c",
+   "type": "file",
+   "bytes": 8596,
+   "sha256": "fd8aaaefd5eb3d9fc388bdc5b715d1c6993ecc9367f5432d3b120a0278904edc",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/gun.c",
+   "type": "file",
+   "bytes": 25942,
+   "sha256": "3bfd36b06284ba97d6105b8a6a5d18b2b34b75b3a1285f16d018680fb174915f",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/gzappend.c",
+   "type": "file",
+   "bytes": 16978,
+   "sha256": "6de91c8305e37560117bff44136abff72b16b028c0bda0bbac7ea07e4988b0ce",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/gzjoin.c",
+   "type": "file",
+   "bytes": 14132,
+   "sha256": "90b9d6c39a5fc91cf1cc9b96b025a508a8015dc502cd9374c754b44078593f57",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/gzlog.c",
+   "type": "file",
+   "bytes": 41541,
+   "sha256": "196872021c96099fd30c880ac2cccd1350fdbd81179731f3914153a26ebf72e9",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/gzlog.h",
+   "type": "file",
+   "bytes": 4558,
+   "sha256": "681f280437f867820bf39880e2f4fc641d402879e399ba2e6a31d73feefe8edc",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/gznorm.c",
+   "type": "file",
+   "bytes": 22182,
+   "sha256": "e5a8f5c3b107f27212f7d5fbfcf072a337a1b4ea32929ae31c168997438a5cc0",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/infcover.c",
+   "type": "file",
+   "bytes": 24723,
+   "sha256": "f654f3fcc74b33bd95cda63d13fe0ce589bcfe965544e0c17ee597d75efbd090",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/minigzip.c",
+   "type": "file",
+   "bytes": 15797,
+   "sha256": "f9777d1e8b337573e12daa8091dcf22e88a9b155fc0acad15b8224c377bfe027",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/zlib_how.html",
+   "type": "file",
+   "bytes": 29824,
+   "sha256": "80fb647be8450bd7a07d8495244e1f061dfbdbdb53172ca24e7ffff8ace9c72f",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/zpipe.c",
+   "type": "file",
+   "bytes": 6323,
+   "sha256": "68140a82582ede938159630bca0fb13a93b4bf1cb2e85b08943c26242cf8f3a6",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/zran.c",
+   "type": "file",
+   "bytes": 18158,
+   "sha256": "10f9568b1f54cdb7474a38c5bc479aa0edb07a0eed2e999bdad4c521f6b25330",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/examples/zran.h",
+   "type": "file",
+   "bytes": 2131,
+   "sha256": "9a0d4c15f898c43deae2c5e98a5c66c637a1b25573d662fe91a789c386eaf971",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g-dev/txtvsbin.txt.gz",
+   "type": "file",
+   "bytes": 2375,
+   "sha256": "05850c2041bc7a386ee04947070c47659cb3d11f342595815f79ef46fe95fef1",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g/changelog.Debian.gz",
+   "type": "file",
+   "bytes": 1044,
+   "sha256": "8fbcef2966a6fe1d50573330e8c087af48b1e2d32942b3df59421c11d03d01c7",
+   "sourcePackage": "zlib1g_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g/changelog.gz",
+   "type": "file",
+   "bytes": 29091,
+   "sha256": "b5d879c91dbaedb48c342bc8560ddcf29b472bbe0a7aaff6d622741a86ac199f",
+   "sourcePackage": "zlib1g_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/doc/zlib1g/copyright",
+   "type": "file",
+   "bytes": 2927,
+   "sha256": "9e5b96d63773a5d177ba264254390f792be07e41748ebd94730981c6cac31cc6",
+   "sourcePackage": "zlib1g_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/lintian/overrides/libjpeg62-turbo",
+   "type": "file",
+   "bytes": 386,
+   "sha256": "fe0c416dfe223cf9538e01337fd8574f1263a157f028f6df9ddfb69e9278a89b",
+   "sourcePackage": "libjpeg62-turbo_2.1.5-2_amd64.deb"
+  },
+  {
+   "path": "usr/share/man/man1/libpng-config.1.gz",
+   "type": "symlink",
+   "target": "libpng16-config.1.gz"
+  },
+  {
+   "path": "usr/share/man/man1/libpng16-config.1.gz",
+   "type": "file",
+   "bytes": 562,
+   "sha256": "e871b86893990ecfab287f610c1a88a0720bf86ce49e01e3a18413251c70b6d4",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/man/man3/libpng.3.gz",
+   "type": "file",
+   "bytes": 77034,
+   "sha256": "4d296e01546faafa96b07fb00bbabe7ed882cff90b87208f74a8ae2569c51a39",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/man/man3/libpngpf.3.gz",
+   "type": "file",
+   "bytes": 485,
+   "sha256": "ccc35a6d7c28e0405f8d6e39426575b463871554d6d7eb734913910b09cc44f1",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  },
+  {
+   "path": "usr/share/man/man3/zlib.3.gz",
+   "type": "file",
+   "bytes": 2092,
+   "sha256": "2ffe9c0dbafc2f5c3f8289a149524c7e3922d1f56fe4497c9d42a073a02760b5",
+   "sourcePackage": "zlib1g-dev_1.2.13.dfsg-1_amd64.deb"
+  },
+  {
+   "path": "usr/share/man/man5/png.5.gz",
+   "type": "file",
+   "bytes": 1146,
+   "sha256": "0fcce90cc4fcb86577a5c95fcd3f6d90665703513112f839ca98de8441ad0718",
+   "sourcePackage": "libpng-dev_1.6.39-2+deb12u5_amd64.deb"
+  }
+ ]
+}

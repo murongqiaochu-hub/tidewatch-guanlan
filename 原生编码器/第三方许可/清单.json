@@ -1,0 +1,132 @@
+{
+ "schemaVersion": 1,
+ "description": "原生编码器（libpng/libjpeg-turbo/libwebp/zlib/glibc/GCC 运行时）第三方许可文本清单；来源为锁定的 Debian bookworm deb 与对应源码包。",
+ "entries": [
+  {
+   "component": "libpng",
+   "file": "libpng1.6_1.6.39_libpng-1.6.39_LICENSE",
+   "bytes": 5345,
+   "sha256": "dfe5a536b0e5a531f844fb9c101a3089aca60772a503893b8e15f9457e369960"
+  },
+  {
+   "component": "libpng",
+   "file": "libpng16-16.COPYRIGHT",
+   "bytes": 12976,
+   "sha256": "68bd3997355bc44ccb97ff5e2bb146360e762c7d9c721945a4fabf77d1349e4a"
+  },
+  {
+   "component": "libpng",
+   "file": "libpng1.6_1.6.39_libpng-1.6.39_contrib_gregbook_COPYING",
+   "bytes": 18097,
+   "sha256": "d6cb0e9e560f51085556949a84af12b79a00f10ab8b66c752537faf7cd665572"
+  },
+  {
+   "component": "libpng",
+   "file": "libpng1.6_1.6.39_libpng-1.6.39_contrib_gregbook_LICENSE",
+   "bytes": 2373,
+   "sha256": "b6a03c1803eb58ffb1f1278d5c7d4096c4c116e66dce8a7553e8c77d163c3438"
+  },
+  {
+   "component": "libjpeg-turbo",
+   "file": "libjpeg-turbo_2.1.5_libjpeg-turbo-2.1.5_LICENSE.md",
+   "bytes": 5213,
+   "sha256": "60c756742db3ad1913304e8b13f0e86e22e51adb50cc0b3333c163f7e45ceec1"
+  },
+  {
+   "component": "libjpeg-turbo",
+   "file": "libjpeg-turbo_2.1.5_libjpeg-turbo-2.1.5_README.ijg",
+   "bytes": 12732,
+   "sha256": "4b7b9f8c03bb8d60270dfd12684e70ab21e4abfd27e73905cd1a7c4cae6f5cdb"
+  },
+  {
+   "component": "libjpeg-turbo",
+   "file": "libjpeg62-turbo-dev.COPYRIGHT",
+   "bytes": 38846,
+   "sha256": "3821184e23385bf2cdc01f56bd999b34036fc3aa03d5135d41680374eb81bf8a"
+  },
+  {
+   "component": "libwebp",
+   "file": "libwebp_1.2.4_libwebp-1.2.4_COPYING",
+   "bytes": 1496,
+   "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+  },
+  {
+   "component": "libwebp",
+   "file": "libwebp_1.2.4_libwebp-1.2.4_PATENTS",
+   "bytes": 1436,
+   "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+  },
+  {
+   "component": "libwebp",
+   "file": "libwebp-dev.COPYRIGHT",
+   "bytes": 2027,
+   "sha256": "01eb328708a9454061dd13931b19135e1c2c6251a7e6a6d0efc4b9bc436109c7"
+  },
+  {
+   "component": "zlib",
+   "file": "zlib_1.2.13.dfsg_zlib-1.2.13.dfsg_LICENSE",
+   "bytes": 1002,
+   "sha256": "845efc77857d485d91fb3e0b884aaa929368c717ae8186b66fe1ed2495753243"
+  },
+  {
+   "component": "zlib",
+   "file": "zlib1g-dev.COPYRIGHT",
+   "bytes": 2927,
+   "sha256": "9e5b96d63773a5d177ba264254390f792be07e41748ebd94730981c6cac31cc6"
+  },
+  {
+   "component": "glibc",
+   "file": "glibc_debian_copyright",
+   "bytes": 25467,
+   "sha256": "40c7e1f2118531f038ca22999bd976901254e1bc5cd1b0f0211bdd064c599987"
+  },
+  {
+   "component": "glibc",
+   "file": "glibc_glibc-2.36_COPYING",
+   "bytes": 18092,
+   "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+  },
+  {
+   "component": "glibc",
+   "file": "glibc_glibc-2.36_COPYING.LIB",
+   "bytes": 26530,
+   "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551"
+  },
+  {
+   "component": "glibc",
+   "file": "glibc_glibc-2.36_LICENSES",
+   "bytes": 18943,
+   "sha256": "b33d0bd9f685b46853548814893a6135e74430d12f6d94ab3eba42fc591f83bc"
+  },
+  {
+   "component": "gcc-runtime",
+   "file": "GCC-Runtime-Exception-3.1.txt",
+   "bytes": 3324,
+   "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74"
+  },
+  {
+   "component": "gcc-runtime",
+   "file": "GPL-2.0-build-sources-only.txt",
+   "bytes": 18002,
+   "sha256": "231f7edcc7352d7734a96eef0b8030f77982678c516876fcb81e25b32d68564c"
+  },
+  {
+   "component": "gcc-runtime",
+   "file": "GPL-3.0-build-sources-only.txt",
+   "bytes": 35147,
+   "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+  },
+  {
+   "component": "gcc-runtime",
+   "file": "LGPL-2.1.txt",
+   "bytes": 26419,
+   "sha256": "20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95"
+  },
+  {
+   "component": "gcc-runtime",
+   "file": "Apache-2.0.txt",
+   "bytes": 11358,
+   "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  }
+ ]
+}
