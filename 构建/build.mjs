@@ -17,7 +17,7 @@ export const hostFiles = Object.freeze(['宿主/synthetic-fixtures.mjs', '宿主
 export const buildFiles = Object.freeze(['构建/build.mjs', '构建/esm-compiler.mjs', '构建/README.md', '构建/打包交付插件.mjs', '平台/插件发行.mjs', '平台/服务地址.mjs', '品牌/identity.mjs']);
 const ownTests = ['测试/宿主测试工具.mjs', '测试/宿主安全.test.mjs', '测试/宿主图片与适配.test.mjs', '测试/宿主事务.test.mjs', '测试/宿主目录与撤权.test.mjs', '测试/宿主JPEG.test.mjs', '测试/构建编译.test.mjs', '测试/构建生产模式.test.mjs'];
 const interfaceTests = ['测试/插件导出.test.mjs', '测试/插件发布桥.test.mjs', '测试/插件入口.test.mjs', '测试/查看器核心.test.mjs', '测试/查看器资源.test.mjs', '测试/查看器界面模型.test.mjs', '测试/查看器原生Fetch接收者.test.mjs', '测试/查看器生产兼容核心.test.mjs', '测试/查看器生产交互.test.mjs', '测试/查看器LOD过渡.test.mjs', '测试/生产适配器.test.mjs', '测试/插件生产协议.test.mjs', '测试/插件生产流程.test.mjs'];
-const optionalDocuments = ['package.json', 'README.md', 'NOTICE.md', 'NOTICE', 'LICENSE.DRAFT', 'LICENSE.DRAFT.md', '来源记录/宿主与构建来源.md', '来源记录/插件来源与验收.md', '来源记录/查看器来源与验收.md', '来源记录/02_旧模块条件复用审计.json', '来源记录/03_可见图片与默认原生细节行为补充.md', '来源记录/04_主Agent浏览器整合修正.md', '来源记录/生产兼容核心来源.md', '来源记录/生产查看器交互来源.md', '来源记录/插件生产兼容来源.md'];
+const optionalDocuments = ['package.json', 'README.md', 'NOTICE.md', 'NOTICE', 'LICENSE', '来源记录/宿主与构建来源.md', '来源记录/插件来源与验收.md', '来源记录/查看器来源与验收.md', '来源记录/02_旧模块条件复用审计.json', '来源记录/03_可见图片与默认原生细节行为补充.md', '来源记录/04_主Agent浏览器整合修正.md', '来源记录/生产兼容核心来源.md', '来源记录/生产查看器交互来源.md', '来源记录/插件生产兼容来源.md'];
 export function validateServiceOrigin(value) {
   if (value === undefined || value === null || value === '') return null;
   const u = new URL(value);

@@ -1,15 +1,17 @@
 {
-  "name": "tidewatch-guanlan-candidate",
-  "version": "0.2.0-independent-development",
+  "name": "tidewatch-guanlan",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN LICENSE",
+  "description": "Tidewatch 观澜：自托管的 Figma 设计交付与标注查看工具",
   "engines": { "node": ">=22" },
   "scripts": {
     "test": "node --test --test-concurrency=1 测试/*.test.mjs",
     "start": "node 平台/启动.mjs",
     "demo": "node 宿主/demo-server.mjs",
-    "build": "node 构建/build.mjs"
+    "build": "node 构建/build.mjs",
+    "image": "sh 构建/发布镜像.sh"
   },
   "dependencies": {},
   "devDependencies": {}

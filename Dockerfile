@@ -49,6 +49,7 @@ COPY --from=plugin /out/plugin.zip /app/downloads/plugin.zip
 COPY 原生编码器/运行时/ /app/原生编码器/运行时/
 # 随镜像提供 NOTICE、整镜像 SBOM、第三方锁与原生编码器 SBOM；对应源码按发布渠道单独提供。
 COPY NOTICE.md /app/NOTICE.md
+COPY LICENSE /app/LICENSE
 COPY 系统第三方/整镜像.SBOM.cdx.json /app/SBOM.cdx.json
 COPY 系统第三方/系统第三方.lock.json /app/第三方锁.json
 COPY 原生编码器/SBOM.cdx.json /app/原生编码器/SBOM.cdx.json
