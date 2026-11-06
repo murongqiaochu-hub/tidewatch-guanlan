@@ -9,3 +9,7 @@
 !宿主/production-adapter.mjs
 !宿主/production-shell.css
 !宿主/stored-zip.mjs
+!NOTICE.md
+!系统第三方/整镜像.SBOM.cdx.json
+!系统第三方/系统第三方.lock.json
+!原生编码器/SBOM.cdx.json

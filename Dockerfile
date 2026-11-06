@@ -19,6 +19,11 @@ COPY 查看器/ ./查看器/
 COPY 界面/ ./界面/
 COPY 品牌/identity.mjs 品牌/guanlan-logo.mjs ./品牌/
 COPY 宿主/production-adapter.mjs 宿主/production-shell.css 宿主/stored-zip.mjs ./宿主/
+# 随镜像提供 NOTICE、整镜像 SBOM、第三方锁与原生编码器 SBOM；对应源码按发布渠道单独提供。
+COPY NOTICE.md /app/NOTICE.md
+COPY 系统第三方/整镜像.SBOM.cdx.json /app/SBOM.cdx.json
+COPY 系统第三方/系统第三方.lock.json /app/第三方锁.json
+COPY 原生编码器/SBOM.cdx.json /app/原生编码器/SBOM.cdx.json
 
 # 源码文件可能带 0600/0700 权限；统一为 root 只读、非 root 可读，否则 10001 无法加载模块。
 RUN chmod -R a+rX /app
