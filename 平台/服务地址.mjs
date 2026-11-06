@@ -16,7 +16,7 @@ export function requiredServiceOrigin(env = process.env) {
   if (!origin) {
     throw new Error(
       `${SERVICE_ORIGIN_ENV} is not configured. This build has no public default server; ` +
-      'set the exact HTTPS service origin explicitly (see 发布审计/地址配置升级说明.md).'
+      'set the exact HTTPS service origin explicitly (see 平台/README.md, section 来源地址与插件).'
     );
   }
   return origin;
