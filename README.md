@@ -19,7 +19,7 @@ Tidewatch 观澜是一套自托管的 Figma 设计交付与标注查看工具，
 
 ## 私有化部署
 
-两种方式：直接运行 Node 服务（下文），或用仓库内的 `Dockerfile` + `compose.yaml` 构建容器镜像（已在隔离 NAS Docker 环境验证；这不等同于生产部署或公开发行批准）。容器方式的步骤、Caddy 内部 CA HTTPS 链路测试及仍未验证项见[容器化部署说明](<部署与运维/04_容器化部署.md>)。
+两种方式：用现成容器镜像（推荐），或直接运行 Node 服务。镜像已发布到 Docker Hub，构建细节、Caddy 内部 CA HTTPS 链路测试及仍未验证项见[容器化部署说明](<部署与运维/04_容器化部署.md>)。
 
 ### 前置条件
 
@@ -28,7 +28,67 @@ Tidewatch 观澜是一套自托管的 Figma 设计交付与标注查看工具，
 - 密钥文件：JWT 签名密钥；首次初始化空数据目录时另需管理员引导密码。两者都应是权限受限的普通文件。
 - 需要让其他设备或公网访问时：有效的 HTTPS 证书与一个反向代理。
 
-### 启动
+### 容器部署（推荐）
+
+镜像：`murongqiaochu/tidewatch-guanlan-public:0.2.0`（Docker Hub 页面有同样的部署说明）。镜像基于 Node 22.23.3 / Debian 12，非 root（`10001:10001`）运行，内置原生编码器与自建 HTTPS 插件包；数据全部在挂载的 `/data`。
+
+```bash
+docker pull murongqiaochu/tidewatch-guanlan-public:0.2.0
+
+mkdir -p /srv/tidewatch/data /srv/tidewatch/secrets
+chmod 700 /srv/tidewatch/data /srv/tidewatch/secrets
+chown -R 10001:10001 /srv/tidewatch/data
+
+head -c 48 /dev/urandom | base64 | tr -d '\n' > /srv/tidewatch/secrets/jwt
+head -c 24 /dev/urandom | base64 | tr -d '\n' > /srv/tidewatch/secrets/admin-password
+chmod 600 /srv/tidewatch/secrets/jwt /srv/tidewatch/secrets/admin-password
+chown 10001:10001 /srv/tidewatch/secrets/jwt /srv/tidewatch/secrets/admin-password
+
+docker run -d --name tidewatch --restart unless-stopped \
+  --user 10001:10001 \
+  -e HANDOFF_DATA_DIR=/data -e HANDOFF_HOST=0.0.0.0 -e HANDOFF_PORT=4318 \
+  -e HANDOFF_PUBLIC_ORIGIN=https://tidewatch.example.com -e HANDOFF_ORIGIN_MODE=fixed \
+  -e HANDOFF_JWT_SECRET_FILE=/run/secrets/jwt \
+  -e HANDOFF_ADMIN_PASSWORD_FILE=/run/secrets/admin-password \
+  -v /srv/tidewatch/data:/data \
+  -v /srv/tidewatch/secrets:/run/secrets:ro \
+  -p 127.0.0.1:4318:4318 \
+  --cap-drop ALL --security-opt no-new-privileges:true \
+  --memory 512m --cpus 1 \
+  murongqiaochu/tidewatch-guanlan-public:0.2.0
+
+curl -fsS http://127.0.0.1:4318/api/health
+```
+
+`HANDOFF_PUBLIC_ORIGIN` 必须是精确 origin（协议 + 主机，带端口时含端口，不带路径、结尾斜杠或通配符）。容器只监听回环，由同机 Caddy/Nginx 终止 TLS 并转发，转发时保留原始 `Host` 与端口：
+
+```caddy
+tidewatch.example.com {
+    reverse_proxy 127.0.0.1:4318
+}
+```
+
+首次用 `admin` + 生成的引导密码登录；已有数据集不会重置密码。
+
+### 配置项
+
+| 变量 | 默认 | 说明 |
+|---|---|---|
+| `HANDOFF_DATA_DIR` | — | 数据目录（容器内 `/data`）；需专用、至少三级绝对路径，不能落在 `secrets`/`backups` 等敏感名 |
+| `HANDOFF_HOST` / `HANDOFF_PORT` | `127.0.0.1` / `4318` | 监听地址与端口（容器内用 `0.0.0.0`） |
+| `HANDOFF_PUBLIC_ORIGIN` | 无 | 精确 HTTPS origin，用于来源校验与插件下载元信息 |
+| `HANDOFF_ORIGIN_MODE` | 无 | 反向代理终止 TLS 时设为 `fixed` |
+| `HANDOFF_JWT_SECRET_FILE` | 无 | JWT 签名密钥文件（必填） |
+| `HANDOFF_ADMIN_PASSWORD_FILE` | 无 | 仅在空数据目录首次启动时用于创建管理员 |
+| `HANDOFF_ADMIN_USER` | `admin` | 首次创建的管理员用户名 |
+| `HANDOFF_CODEC_BINARY` | 镜像内 `…/heron-codec` | 原生编码器路径；可挂载自建产物覆盖 |
+| `HANDOFF_CODEC_LIBRARIES` | 镜像内 `…/运行时/lib` | 编码器依赖库目录 |
+| `HANDOFF_PLUGIN_ARCHIVE` | 镜像内 `/app/downloads/plugin.zip` | 供用户从自己服务下载的插件包绝对路径 |
+| `HANDOFF_DENY_DATA_PREFIXES` | 空 | `:` 分隔的绝对路径前缀，显式拒绝把数据写进部署目录 |
+
+数据全部落在 `HANDOFF_DATA_DIR`；升级前先停写并做一致性备份，回退镜像时不要用旧备份覆盖当前数据。
+
+### 直接运行（Node.js）
 
 在 Linux/macOS shell 中设置配置并启动：
 
@@ -76,6 +136,42 @@ curl -fsS http://127.0.0.1:4318/api/health
 - 定向验证：C34 生产协议夹具 25/25、原生预览 HTTP 11/11、暗色网页 53/53；这些结果不替代全量测试。
 
 容器方案已在隔离环境跑通，但还不是"已验证的生产部署"；细节见[容器化部署说明](<部署与运维/04_容器化部署.md>)。
+
+## English quick start
+
+Tidewatch Guanlan is a self-hosted design handoff tool for Figma: publish artboards from the plugin to your own server, browse annotations and slice assets in the browser, and keep revision history — without a third-party SaaS.
+
+```bash
+docker pull murongqiaochu/tidewatch-guanlan-public:0.2.0
+
+mkdir -p /srv/tidewatch/data /srv/tidewatch/secrets
+chmod 700 /srv/tidewatch/data /srv/tidewatch/secrets
+chown -R 10001:10001 /srv/tidewatch/data
+head -c 48 /dev/urandom | base64 | tr -d '\n' > /srv/tidewatch/secrets/jwt
+head -c 24 /dev/urandom | base64 | tr -d '\n' > /srv/tidewatch/secrets/admin-password
+chmod 600 /srv/tidewatch/secrets/jwt /srv/tidewatch/secrets/admin-password
+chown 10001:10001 /srv/tidewatch/secrets/jwt /srv/tidewatch/secrets/admin-password
+
+docker run -d --name tidewatch --restart unless-stopped \
+  --user 10001:10001 \
+  -e HANDOFF_DATA_DIR=/data -e HANDOFF_HOST=0.0.0.0 -e HANDOFF_PORT=4318 \
+  -e HANDOFF_PUBLIC_ORIGIN=https://tidewatch.example.com -e HANDOFF_ORIGIN_MODE=fixed \
+  -e HANDOFF_JWT_SECRET_FILE=/run/secrets/jwt \
+  -e HANDOFF_ADMIN_PASSWORD_FILE=/run/secrets/admin-password \
+  -v /srv/tidewatch/data:/data -v /srv/tidewatch/secrets:/run/secrets:ro \
+  -p 127.0.0.1:4318:4318 \
+  --cap-drop ALL --security-opt no-new-privileges:true \
+  --memory 512m --cpus 1 \
+  murongqiaochu/tidewatch-guanlan-public:0.2.0
+
+curl -fsS http://127.0.0.1:4318/api/health
+```
+
+Put Caddy or Nginx in front for TLS and keep the original `Host` header; the container only listens on loopback. `HANDOFF_PUBLIC_ORIGIN` must be an exact HTTPS origin (no path, no trailing slash, no wildcard). Then install the Figma plugin from `plugin.zip` served by your own instance (or from the GitHub release), point it at your origin, and start publishing artboards.
+
+Full options, backup notes and the sample Figma file are in the Chinese sections above and on the [Docker Hub page](<https://hub.docker.com/r/murongqiaochu/tidewatch-guanlan-public>).
+
+License: source-available, **not** open source — free for individuals and internal organisational self-hosting; commercial licence required to monetise the software itself. See [LICENSE](<LICENSE>).
 
 ## 许可与商业授权
 
